@@ -1,27 +1,27 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  
-  --color-bg-deep: #080809;
-  --color-bg-surface: #111112;
-  --color-bg-card: #18181B;
-  --color-ink-primary: #f4f4f5;
-  --color-ink-secondary: #a1a1aa;
-  --color-ink-muted: #52525b;
+
+  --color-deep: #080809;
+  --color-surface: #111112;
+  --color-card: #18181b;
+  --color-primary: #f4f4f5;
+  --color-secondary: #a1a1aa;
+  --color-muted: #52525b;
   --color-accent: #6366f1;
   --color-accent-glow: rgba(99, 102, 241, 0.15);
-  --color-border-custom: #27272a;
+  --color-custom: #27272a;
 }
 
 body {
-  @apply bg-bg-deep text-ink-primary antialiased font-sans;
+  @apply bg-deep text-primary antialiased font-sans;
 }
 
 .glass-panel {
-  @apply bg-bg-surface border border-border-custom shadow-xl;
+  @apply bg-surface border border-custom shadow-xl;
 }
 
 .btn-primary {
@@ -29,11 +29,11 @@ body {
 }
 
 .btn-secondary {
-  @apply bg-bg-card border border-border-custom text-ink-primary px-4 py-2 rounded-lg font-medium transition-all hover:bg-bg-surface active:scale-95;
+  @apply bg-card border border-custom text-primary px-4 py-2 rounded-lg font-medium transition-all hover:bg-surface active:scale-95;
 }
 
 .input-field {
-  @apply w-full bg-bg-surface border border-border-custom text-ink-primary rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-accent/20 transition-all;
+  @apply w-full bg-surface border border-custom text-primary rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-accent/20 transition-all;
 }
 
 ::-webkit-scrollbar {
@@ -41,9 +41,9 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-bg-deep;
+  @apply bg-deep;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-border-custom rounded-full;
+  @apply bg-custom rounded-full;
 }
