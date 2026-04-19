@@ -1,28 +1,42 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-interface User {
-  id: number;
-  email: string;
-}
+import { Issue, User } from "./types";
 
 interface AuthState {
-  user: User | null;
+  userId: string | null;
   token: string | null;
-  setAuth: (user: User | null, token: string | null) => void;
+  setAuth: (userId: string | null, token: string | null) => void;
   logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      user: null,
+      userId: null,
       token: null,
-      setAuth: (user, token) => set({ user, token }),
-      logout: () => set({ user: null, token: null }),
+      setAuth: (userId, token) => set({ userId, token }),
+      logout: () => set({ userId: null, token: null }),
     }),
     {
       name: "auth-storage",
     },
   ),
 );
+
+interface IssueState {
+  issues: Issue[];
+  stats: { status: string; count: number }[];
+  loading: boolean;
+  setIssues: (issues: Issue[]) => void;
+  setStats: (stats: { status: string; count: number }[]) => void;
+  setLoading: (loading: boolean) => void;
+}
+
+export const useIssueStore = create<IssueState>((set) => ({
+  issues: [],
+  stats: [],
+  loading: false,
+  setIssues: (issues) => set({ issues }),
+  setStats: (stats) => set({ stats }),
+  setLoading: (loading) => set({ loading }),
+}));
