@@ -8,11 +8,11 @@
   --color-deep: #080809;
   --color-surface: #111112;
   --color-card: #18181b;
-  --color-primary: #f4f4f5;
+  --color-primary: #f3f4f6;
   --color-secondary: #a1a1aa;
   --color-muted: #52525b;
-  --color-accent: #6366f1;
-  --color-accent-glow: rgba(99, 102, 241, 0.15);
+  --color-accent: #3b82f6;
+  --color-accent-glow: rgba(59, 130, 246, 0.1);
   --color-custom: #27272a;
 }
 
@@ -33,7 +33,7 @@ body {
 }
 
 .input-field {
-  @apply w-full bg-surface border border-custom text-primary rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-accent/20 transition-all;
+  @apply w-full bg-surface border border-custom text-primary rounded-lg px-4 py-2 outline-none transition-all;
 }
 
 ::-webkit-scrollbar {

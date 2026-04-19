@@ -1,35 +1,43 @@
-import { useAuthStore } from "@/src/lib/store";
+import { useAuthStore } from "../../lib/store";
 import { motion } from "motion/react";
 import React, { useState } from "react";
-import Logo from "../Logo";
+import Logo from "../ui/Logo";
+import { loginUser, verifyJwtToken } from "../../lib/api";
+import { User } from "../../lib/types";
+import { toast } from "react-toastify";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { setAuth } = useAuthStore();
 
-  const mode = "login";
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-    // try {
-    //   if (mode === "login") {
-    //     const { token, user } = await api.auth.login({ email, password });
-    //     setAuth(user, token);
-    //   } else {
-    //     await api.auth.register({ email, password });
-    //     alert("Registration successful! Please login.");
-    //     window.location.hash = "#login";
-    //   }
-    // } catch (err: any) {
-    //   setError(err.message);
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      const user: User = {
+        userId: email,
+        accessKey: password,
+      };
+      const response = await loginUser(user);
+      const isVaild = await verifyJwtToken(response.accessToken);
+      if (isVaild) {
+        toast.success(response.message);
+        setAuth(isVaild.sub, response.accessToken);
+        navigate("/dashboard");
+      } else {
+        toast.error("Authorization failed");
+      }
+    } catch (err: any) {
+      toast.error(err.response.data.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,7 +53,8 @@ const Login = () => {
           </div>
           <h2 className="text-3xl font-bold text-primary tracking-tight">
             FlopNop
-          </h2>
+          </h2>{" "}
+          <p className="text-secondary mt-2">Login to debug environment.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -87,19 +96,14 @@ const Login = () => {
           </button>
         </form>
 
-        <p className="text-secondary mt-2">
-          <p className="text-center mt-8 text-sm text-muted">
-            {mode === "login" ? "New to FlopNop? " : "Existing credentials? "}
-            <button
-              onClick={() =>
-                window.location.hash === "#login" &&
-                (window.location.hash = "#register")
-              }
-              className="text-accent font-bold hover:underline"
-            >
-              {mode === "login" ? "Register" : "Login"}
-            </button>
-          </p>
+        <p className="text-center mt-8 text-sm text-muted">
+          New to FlopNop?{" "}
+          <Link
+            to="/register"
+            className="text-accent font-bold hover:underline"
+          >
+            Register
+          </Link>
         </p>
       </motion.div>
     </div>

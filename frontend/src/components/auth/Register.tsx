@@ -1,35 +1,36 @@
-import { useAuthStore } from "@/src/lib/store";
+import { useAuthStore } from "../../lib/store";
 import { motion } from "motion/react";
 import React, { useState } from "react";
-import Logo from "../Logo";
+import Logo from "../ui/Logo";
+import { User } from "../../lib/types";
+import { registerUser } from "../../lib/api";
+import { toast } from "react-toastify";
+import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setAuth } = useAuthStore();
-
-  const mode = "login";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-    // try {
-    //   if (mode === "login") {
-    //     const { token, user } = await api.auth.login({ email, password });
-    //     setAuth(user, token);
-    //   } else {
-    //     await api.auth.register({ email, password });
-    //     alert("Registration successful! Please login.");
-    //     window.location.hash = "#login";
-    //   }
-    // } catch (err: any) {
-    //   setError(err.message);
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      const user: User = {
+        userId: email,
+        accessKey: password,
+      };
+      const response = await registerUser(user);
+      toast.success(response.message);
+      navigate("/login");
+    } catch (err: any) {
+      toast.error(err.response.data.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -92,15 +93,9 @@ const Register = () => {
 
         <p className="text-center mt-8 text-sm text-muted">
           Already have an account?{" "}
-          <button
-            onClick={() =>
-              window.location.hash === "#register" &&
-              (window.location.hash = "#login")
-            }
-            className="text-accent font-bold hover:underline"
-          >
+          <Link to="/login" className="text-accent font-bold hover:underline">
             Login
-          </button>
+          </Link>
         </p>
       </motion.div>
     </div>
