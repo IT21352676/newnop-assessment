@@ -49,7 +49,7 @@ const Login = () => {
       >
         <div className="mb-8 text-center">
           <div className="w-16 h-16 bg-accent rounded-2xl shadow-[0_0_30px_rgba(99,102,241,0.3)] flex items-center justify-center mx-auto mb-6">
-            <Logo className="w-9 h-9" />
+            <Logo className="w-9 h-9" isColors={false} />
           </div>
           <h2 className="text-3xl font-bold text-primary tracking-tight">
             FlopNop
