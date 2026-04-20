@@ -13,7 +13,6 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      {" "}
       <TooltipProvider>
         <Routes>
           <Route
@@ -51,7 +50,7 @@ export default function App() {
           draggable
           pauseOnHover
           theme="dark"
-        />{" "}
+        />
       </TooltipProvider>
     </BrowserRouter>
   );

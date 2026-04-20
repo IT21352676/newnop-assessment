@@ -14,8 +14,15 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { IconFileTypeCsv, IconJson, IconUsersGroup } from "@tabler/icons-react";
-import { CalendarDays, Download, Plus, Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  Plus,
+  Search,
+} from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import {
   getAllIssues,
@@ -32,6 +39,7 @@ import CreateIssue from "./CreateIssue";
 import InspectionIssue from "./InspectionIssue";
 import SortableIssueCard from "./SortableIssueCard";
 import DroppableColumn from "../ui/DroppableColumn";
+import ScrollIndicator from "../ui/ScrollIndicator";
 
 const Kanban = () => {
   const { issues, setIssues, loading, setLoading } = useIssueStore();
@@ -46,6 +54,24 @@ const Kanban = () => {
   const [issueStatus, setIssueStatus] = useState<IssueStatus[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [filteredIssues, setFilteredIssues] = useState<Issue[]>([]);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const checkScrollAvailability = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } =
+        scrollContainerRef.current;
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  useEffect(() => {
+    checkScrollAvailability();
+    window.addEventListener("resize", checkScrollAvailability);
+    return () => window.removeEventListener("resize", checkScrollAvailability);
+  }, [filteredIssues, loading, issues]);
 
   useEffect(() => {
     const fetchIssueStatus = async () => {
@@ -175,7 +201,7 @@ const Kanban = () => {
             i.priority,
             i.severity,
             i.author.userId,
-            i.createdAt,
+            new Date(i.createdAt).toUTCString(),
           ]),
         ]
           .map((e) => e.join(","))
@@ -196,14 +222,6 @@ const Kanban = () => {
       toast.error(err.response.data.message);
     }
   };
-
-  //   const statsMap = useMemo(() => {
-  //     const map: any = { Open: 0, "In Progress": 0, Resolved: 0, Closed: 0 };
-  //     stats.forEach((s) => {
-  //       map[s.status] = s.count;
-  //     });
-  //     return map;
-  //   }, [stats]);
 
   const onDragStart = (event: DragStartEvent) => {
     if (event.active.data.current?.type === "Issue") {
@@ -376,7 +394,7 @@ const Kanban = () => {
                           )}
                         </div>
                       </TooltipTrigger>
-                      <TooltipContent className="bg-accent">
+                      <TooltipContent className="bg-accent" side="bottom">
                         <p>{user.userId}</p>
                       </TooltipContent>
                     </Tooltip>
@@ -385,90 +403,98 @@ const Kanban = () => {
             </div>
           </div>
         </div>
+        <div className="relative">
+          <ScrollIndicator direction="left" visible={canScrollLeft} />
+          <ScrollIndicator direction="right" visible={canScrollRight} />
 
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCorners}
-          onDragStart={onDragStart}
-          onDragEnd={onDragEnd}
-        >
-          <div className="flex gap-4 overflow-x-auto w-full">
-            {issueStatus.map((status) => {
-              const columnIssues = filteredIssues.filter(
-                (i) => i.status === status,
-              );
-              return (
-                <div
-                  key={status}
-                  className="flex flex-col gap-4 min-w-90 min-h-60 bg-card/80 p-4 rounded-2xl mb-4"
-                >
-                  <div className="flex items-center justify-between px-2">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`${issueStatusMap[status].color} animate-pulse`}
-                      >
-                        {issueStatusMap[status].icon}
-                      </span>
-                      <h3
-                        className={`text-[11px] font-bold uppercase tracking-[0.15em] text-ink-primary ${issueStatusMap[status].color}`}
-                      >
-                        {status.replace("_", " ")}
-                      </h3>
-                    </div>
-                    <span className="text-[10px] font-mono text-white/50 bg-bg-card/50 px-2 py-0.5 rounded border border-border-custom">
-                      {columnIssues.length}
-                    </span>
-                  </div>
-
-                  <div>
-                    <SortableContext
-                      items={columnIssues.map((i) => i.issueId)}
-                      strategy={verticalListSortingStrategy}
-                    >
-                      <DroppableColumn id={status}>
-                        <div className="flex flex-col gap-3 min-h-[400px] max-h-full">
-                          {columnIssues.map((issue) => (
-                            <SortableIssueCard
-                              key={issue.issueId}
-                              issue={issue}
-                              onClick={(issue) => setSelectedIssue(issue)}
-                            />
-                          ))}
-                        </div>
-                      </DroppableColumn>
-                    </SortableContext>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <InspectionIssue
-            selectedIssue={selectedIssue}
-            setSelectedIssue={setSelectedIssue}
-            onChange={fetchIssueData}
-          />
-
-          <DragOverlay
-            dropAnimation={{
-              sideEffects: defaultDropAnimationSideEffects({
-                styles: {
-                  active: {
-                    opacity: "0.5",
-                  },
-                },
-              }),
-            }}
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCorners}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
           >
-            {activeIssue ? (
-              <SortableIssueCard
-                issue={activeIssue}
-                onClick={() => {}}
-                isOverlay
-              />
-            ) : null}
-          </DragOverlay>
-        </DndContext>
+            <div
+              ref={scrollContainerRef}
+              onScroll={checkScrollAvailability}
+              className="flex gap-6 overflow-x-auto pb-2 scrollbar-hide"
+            >
+              {issueStatus.map((status) => {
+                const columnIssues = filteredIssues.filter(
+                  (i) => i.status === status,
+                );
+                return (
+                  <div
+                    key={status}
+                    className="flex flex-col gap-4 min-w-90 bg-card/80 p-4 rounded-2xl mb-4"
+                  >
+                    <div className="flex items-center justify-between px-2">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`${issueStatusMap[status].color} animate-pulse`}
+                        >
+                          {issueStatusMap[status].icon}
+                        </span>
+                        <h3
+                          className={`text-[11px] font-bold uppercase tracking-[0.15em] text-ink-primary ${issueStatusMap[status].color}`}
+                        >
+                          {status.replace("_", " ")}
+                        </h3>
+                      </div>
+                      <span className="text-[10px] font-mono text-white/50 bg-bg-card/50 px-2 py-0.5 rounded border border-border-custom">
+                        {columnIssues.length}
+                      </span>
+                    </div>
+
+                    <div className="h-full">
+                      <SortableContext
+                        items={columnIssues.map((i) => i.issueId)}
+                        strategy={verticalListSortingStrategy}
+                      >
+                        <DroppableColumn id={status}>
+                          <div className="flex flex-col gap-3 min-h-[400px]">
+                            {columnIssues.map((issue) => (
+                              <SortableIssueCard
+                                key={issue.issueId}
+                                issue={issue}
+                                onClick={(issue) => setSelectedIssue(issue)}
+                              />
+                            ))}
+                          </div>
+                        </DroppableColumn>
+                      </SortableContext>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <InspectionIssue
+              selectedIssue={selectedIssue}
+              setSelectedIssue={setSelectedIssue}
+              onChange={fetchIssueData}
+            />
+
+            <DragOverlay
+              dropAnimation={{
+                sideEffects: defaultDropAnimationSideEffects({
+                  styles: {
+                    active: {
+                      opacity: "0.5",
+                    },
+                  },
+                }),
+              }}
+            >
+              {activeIssue ? (
+                <SortableIssueCard
+                  issue={activeIssue}
+                  onClick={() => {}}
+                  isOverlay
+                />
+              ) : null}
+            </DragOverlay>
+          </DndContext>
+        </div>
       </main>
     </div>
   );
