@@ -7,12 +7,14 @@ import {
 } from 'src/interfaces/types';
 import { IssueDatabaseService } from './database/issue.database.service';
 import { UserDatabaseService } from './database/user.database.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MainService {
   constructor(
     private readonly issueDatabaseService: IssueDatabaseService,
     private readonly userDatabaseService: UserDatabaseService,
+    private readonly configService: ConfigService,
   ) {}
 
   async getAllUsers() {
@@ -53,6 +55,20 @@ export class MainService {
 
   async updateIssue(issue: IssueDto) {
     return await this.issueDatabaseService.updateIssue(issue);
+  }
+
+  async optionalFieldCount() {
+    const defaultCount = 3;
+    const optionalFieldCount = this.configService.get<number>(
+      'OPTIONAL_FIELDS_COUNT',
+    );
+    if (!optionalFieldCount) {
+      console.warn(
+        `Optional fields count not defined in .env file, using default count ${defaultCount}`,
+      );
+      return defaultCount;
+    }
+    return optionalFieldCount;
   }
 
   async addOptionalFields(

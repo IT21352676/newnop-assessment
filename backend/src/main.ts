@@ -16,8 +16,12 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
+  const port = Number(configService.get('PORT'));
+  if (!port) {
+    throw new Error('Port not defined in .env file');
+  }
 
-  await app.listen(Number(configService.get('PORT')));
+  await app.listen(port);
 }
 
 bootstrap();

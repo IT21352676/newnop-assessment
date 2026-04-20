@@ -4,10 +4,6 @@ import {
   Delete,
   Get,
   Headers,
-  HttpException,
-  HttpStatus,
-  Param,
-  Patch,
   Post,
   Put,
   Query,
@@ -150,6 +146,12 @@ export class AppController {
     return await this.mainService.updateIssue(issue);
   }
 
+  @Get('/optional-field-count')
+  @UseGuards(JwtAuthGuard)
+  async optionalFieldCount(@Req() req: any) {
+    return await this.mainService.optionalFieldCount();
+  }
+
   @Post('/add-optional-field')
   @UseGuards(JwtAuthGuard)
   async addOptionalField(
@@ -182,194 +184,4 @@ export class AppController {
   ) {
     return await this.mainService.removeOptionalField(issueId, optionalFieldId);
   }
-
-  // @Post('/save-feed')
-  // @UseGuards(JwtAuthGuard)
-  // async saveFeed(
-  //   @Body()
-  //   data: {
-  //     link: dataInterface.BHWRSSFeedInterface['link'];
-  //   },
-  //   @Req() req: any,
-  // ) {
-  //   const userId = req.user.sub;
-  //   return await this.feedDataBaseService.saveFeed(data.link, userId);
-  // }
-
-  // @Get('/get-all-feeds')
-  // @UseGuards(JwtAuthGuard)
-  // async getAllFeeds(@Req() req: any) {
-  //   const userId = req.user.sub;
-  //   return await this.feedDataBaseService.findAllForUser(userId);
-  // }
-
-  // @Delete('/remove-feed')
-  // @UseGuards(JwtAuthGuard)
-  // async removeFeed(
-  //   @Body()
-  //   data: {
-  //     link: dataInterface.BHWRSSFeedInterface['link'];
-  //   },
-  //   @Req() req: any,
-  // ) {
-  //   const userId = req.user.sub;
-  //   return await this.feedDataBaseService.removeFeed(data.link, userId);
-  // }
-
-  // @Post('/run-bhw-scraper')
-  // @UseGuards(JwtAuthGuard)
-  // async runBhwScraper(
-  //   @Body()
-  //   data: {
-  //     link: dataInterface.BHWRSSFeedInterface['link'];
-  //   },
-  //   @Req() req: any,
-  // ) {
-  //   const userId = req.user.sub;
-  //   return await this.bhwService.runScrapeForFeed(data.link, userId);
-  // }
-
-  // @Post('/stop-bhw-scraper')
-  // @UseGuards(JwtAuthGuard)
-  // async stopBhwScraper() {
-  //   return await this.bhwService.stopScraping();
-  // }
-
-  // @Post('/save-bhw-keyword')
-  // @UseGuards(JwtAuthGuard)
-  // async saveBhwKeyword(@Body() data: { keyword: string }, @Req() req: any) {
-  //   const userId = req.user.sub;
-  //   return await this.bhwKeywordDataBaseService.saveKeyWord(data, userId);
-  // }
-
-  // @Get('/get-all-bhw-keywords')
-  // @UseGuards(JwtAuthGuard)
-  // async getAllBhwKeywords(@Req() req: any) {
-  //   const userId = req.user.sub;
-  //   return await this.bhwKeywordDataBaseService.findAllForUser(userId);
-  // }
-
-  // @Get('/get-bhw-scraping-status')
-  // @UseGuards(JwtAuthGuard)
-  // async getBhwScrapingStatus() {
-  //   return this.bhwService.getScrapingStatus();
-  // }
-
-  // @Delete('/remove-bhw-keyword/:keyword')
-  // @UseGuards(JwtAuthGuard)
-  // async removeBhwKeyword(@Param('keyword') keyword: string, @Req() req: any) {
-  //   const userId = req.user.sub;
-  //   return await this.bhwKeywordDataBaseService.removeKeyWord(keyword, userId);
-  // }
-
-  // @Post('/get-all-bhw-threads')
-  // async getAllKewordMatches(
-  //   @Body()
-  //   data: {
-  //     username: string;
-  //     password: string;
-  //   },
-  //   @Query('query') query?: string,
-  //   @Query('platform') platform?: dataInterface.Platforms,
-  //   @Query('startDate') startDate?: string,
-  //   @Query('endDate') endDate?: string,
-  // ) {
-  //   const loginResponse = await this.authService.validateLogin(
-  //     data?.username,
-  //     data?.password,
-  //   );
-  //   if (loginResponse) {
-  //     const isValid = await this.authService.validateToken(
-  //       loginResponse.accessToken,
-  //     );
-  //     if (isValid && isValid.sub) {
-  //       return await this.apiService.getBHWandDiscordAllMentions(
-  //         isValid.sub,
-  //         {
-  //           query,
-  //           platform,
-  //           startDate,
-  //           endDate,
-  //         },
-  //       );
-  //     }
-  //     throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-  //   }
-  //   throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-  // }
-
-  // @Post('/verify-reddit-feed')
-  // @UseGuards(JwtAuthGuard)
-  // async verifyRedditFeed(
-  //   @Body() data: { rssUrl: dataInterface.RedditRSSFeedInterface['rssUrl'] },
-  // ) {
-  //   return await this.redditService.verifyFeed(data.rssUrl);
-  // }
-
-  // @Post('/run-reddit-scraper')
-  // @UseGuards(JwtAuthGuard)
-  // async runRedditScraper() {
-  //   return await this.redditService.runRedditScraping();
-  // }
-
-  // @Post('/save-reddit-keyword')
-  // @UseGuards(JwtAuthGuard)
-  // async saveRedditKeyword(@Body() data: { keyword: string; subreddit: string }, @Req() req: any) {
-  //   const userId = req.user.sub;
-  //   return await this.redditKeywordDataBaseService.saveKeyWord(data, userId);
-  // }
-
-  // @Get('/get-all-reddit-keywords')
-  // @UseGuards(JwtAuthGuard)
-  // async getAllRedditKeywords(@Req() req: any) {
-  //   const userId = req.user.sub;
-  //   return await this.redditKeywordDataBaseService.findAllForUser(userId);
-  // }
-
-  // @Get('/get-reddit-last-run-time')
-  // @UseGuards(JwtAuthGuard)
-  // async getRedditLastRunTime() {
-  //   return this.redditService.getLastRunTime();
-  // }
-
-  // @Delete('/remove-reddit-keyword')
-  // @UseGuards(JwtAuthGuard)
-  // async removeRedditKeyword(
-  //   @Body() data: { keyword: string; subreddit: string },
-  //   @Req() req: any,
-  // ) {
-  //   const userId = req.user.sub;
-  //   return await this.redditKeywordDataBaseService.removeKeyWord(
-  //     data.keyword,
-  //     data.subreddit,
-  //     userId,
-  //   );
-  // }
-
-  // @Get('/get-all-reddit-entries')
-  // @UseGuards(JwtAuthGuard)
-  // async getAllRedditEntries(@Req() req: any) {
-  //   const userId = req.user.sub;
-  //   return await this.redditEntryDataBaseService.findAllForUser(userId);
-  // }
-
-  // @Get('/user/me')
-  // @UseGuards(JwtAuthGuard)
-  // async getMe(@Req() req: any) {
-  //   const userId = req.user.sub;
-  //   const user = await ((this.accountDataBaseService as any).userDatabaseService).findById(userId);
-  //   if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-  //   const { password, ...result } = user;
-  //   return result;
-  // }
-
-  // @Patch('/user/settings')
-  // @UseGuards(JwtAuthGuard)
-  // async updateSettings(
-  //   @Req() req: any,
-  //   @Body() data: { googleSheetId?: string; slackChannelId?: string },
-  // ) {
-  //   const userId = req.user.sub;
-  //   return await ((this.accountDataBaseService as any).userDatabaseService).updateSettings(userId, data);
-  // }
 }

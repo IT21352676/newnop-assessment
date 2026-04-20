@@ -14,6 +14,7 @@ import {
   getAllIssueSeverity,
   getAllIssueStatus,
   getIssueById,
+  getOptionalFieldCount,
   removeIssue,
   removeOptionalField,
   updateIssue,
@@ -44,8 +45,7 @@ const InspectionIssue = ({
   const [issueSeverities, setIssueSeverities] = useState<IssueSeverity[]>([]);
   const [loading, setLoading] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-
-  console.log(issue);
+  const [optionalFieldCount, setOptionalFieldCount] = useState<number>(0);
 
   const reFetchIssue = async () => {
     const issue = await getIssueById(selectedIssue.issueId);
@@ -68,9 +68,16 @@ const InspectionIssue = ({
       const issueStatuses = await getAllIssueStatus();
       setIssueStatuses(issueStatuses);
     };
+
+    const fetchOptionalFieldCount = async () => {
+      const optionalFieldCount = await getOptionalFieldCount();
+      setOptionalFieldCount(optionalFieldCount);
+    };
+
     fetchIssuePriorities();
     fetchIssueSeverities();
     fetchIssueStatuses();
+    fetchOptionalFieldCount();
   }, []);
 
   useEffect(() => {
@@ -94,8 +101,8 @@ const InspectionIssue = ({
   };
 
   const handleAddOptionalFieldButton = () => {
-    if (issue?.optionalFields?.length >= 5) {
-      toast.error("Maximum 5 optional fields allowed");
+    if (issue?.optionalFields?.length >= optionalFieldCount) {
+      toast.error(`Maximum ${optionalFieldCount} optional fields allowed`);
       return;
     }
     setIssue({

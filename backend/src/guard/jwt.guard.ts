@@ -23,9 +23,14 @@ export class JwtAuthGuard implements CanActivate {
 
     const token = authHeader.split(' ')[1];
 
+    const secret = this.configService.get<string>('JWT_SECRET');
+    if (!secret) {
+      throw new Error('JWT_SECRET not defined in .env file');
+    }
+
     try {
       req.user = await this.jwt.verifyAsync(token, {
-        secret: this.configService.get<string>('JWT_SECRET'),
+        secret: secret,
       });
       return true;
     } catch {

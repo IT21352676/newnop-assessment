@@ -8,8 +8,14 @@ import {
 } from "./types";
 import { useAuthStore } from "./store";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
+if (!apiUrl) {
+  throw new Error("VITE_API_URL is not defined in .env file");
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: apiUrl,
 });
 
 api.interceptors.request.use((config) => {
@@ -25,7 +31,6 @@ export async function registerUser(user: User) {
     "/register",
     user,
   );
-
   return response.data;
 }
 
@@ -98,6 +103,11 @@ export async function removeIssue(issueId: string) {
   const response = await api.delete<Issue | undefined>("/remove-issue", {
     params: { issueId },
   });
+  return response.data;
+}
+
+export async function getOptionalFieldCount() {
+  const response = await api.get<number>("/optional-field-count");
   return response.data;
 }
 
