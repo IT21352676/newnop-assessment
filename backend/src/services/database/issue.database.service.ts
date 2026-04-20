@@ -33,6 +33,7 @@ export class IssueDatabaseService {
       status: issue.status,
       priority: issue.priority,
       severity: issue.severity,
+      optionalFields: [],
     };
     return this.issueRepository.save(newIssue);
   }
@@ -86,6 +87,44 @@ export class IssueDatabaseService {
       author: user,
     };
 
+    return this.issueRepository.save(updatedIssue);
+  }
+
+  async addOptionalField(
+    issueId: string,
+    optionalFields: { id: string; name: string; value: string }[],
+  ): Promise<Issue> {
+    const existingIssue = await this.findById(issueId);
+    if (!existingIssue) {
+      throw new Error('Issue not found');
+    }
+
+    const updatedIssue: Issue = {
+      ...existingIssue,
+      optionalFields: [
+        ...(existingIssue.optionalFields || []),
+        ...optionalFields,
+      ],
+    };
+
+    return this.issueRepository.save(updatedIssue);
+  }
+
+  async removeOptionalField(
+    issueId: string,
+    optionalFieldId: string,
+  ): Promise<Issue> {
+    const existingIssue = await this.findById(issueId);
+    if (!existingIssue) {
+      throw new BadRequestException('Issue not found');
+    }
+    const updatedOptionalFields = existingIssue.optionalFields?.filter(
+      (field) => field.id !== optionalFieldId,
+    );
+    const updatedIssue: Issue = {
+      ...existingIssue,
+      optionalFields: updatedOptionalFields,
+    };
     return this.issueRepository.save(updatedIssue);
   }
 }

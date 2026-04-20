@@ -38,6 +38,11 @@ export class MainService {
   async getAllIssues() {
     return await this.issueDatabaseService.findAll();
   }
+
+  async getIssueById(issueId: string) {
+    return await this.issueDatabaseService.findById(issueId);
+  }
+
   async getAllIssuesByUserId(userId: string) {
     return await this.issueDatabaseService.findAllByUserId(userId);
   }
@@ -48,5 +53,22 @@ export class MainService {
 
   async updateIssue(issue: IssueDto) {
     return await this.issueDatabaseService.updateIssue(issue);
+  }
+
+  async addOptionalFields(
+    issueId: string,
+    optionalFields: { id: string; name: string; value: string }[],
+  ) {
+    return await this.issueDatabaseService.addOptionalField(
+      issueId,
+      optionalFields,
+    );
+  }
+
+  async removeOptionalField(issueId: string, optionalFieldId: string) {
+    return await this.issueDatabaseService.removeOptionalField(
+      issueId,
+      optionalFieldId,
+    );
   }
 }

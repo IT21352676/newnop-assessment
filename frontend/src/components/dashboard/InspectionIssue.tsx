@@ -9,10 +9,13 @@ import {
 import { Trash2, User } from "lucide-react";
 import { format } from "date-fns";
 import {
+  addOptionalFields,
   getAllIssuePriority,
   getAllIssueSeverity,
   getAllIssueStatus,
+  getIssueById,
   removeIssue,
+  removeOptionalField,
   updateIssue,
 } from "../../lib/api";
 import { toast } from "react-toastify";
@@ -35,11 +38,21 @@ const InspectionIssue = ({
   onChange: () => void;
 }) => {
   const [issue, setIssue] = useState<Issue>(selectedIssue);
+  const [initialIssue, setInitialIssue] = useState<Issue>(selectedIssue);
   const [issuePriorities, setIssuePriorities] = useState<IssuePriority[]>([]);
   const [issueStatuses, setIssueStatuses] = useState<IssueStatus[]>([]);
   const [issueSeverities, setIssueSeverities] = useState<IssueSeverity[]>([]);
   const [loading, setLoading] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+
+  console.log(issue);
+
+  const reFetchIssue = async () => {
+    const issue = await getIssueById(selectedIssue.issueId);
+    setInitialIssue(issue);
+    setIssue(issue);
+  };
+
   useEffect(() => {
     const fetchIssuePriorities = async () => {
       const issuePriorities = await getAllIssuePriority();
@@ -62,6 +75,7 @@ const InspectionIssue = ({
 
   useEffect(() => {
     setIssue(selectedIssue);
+    setInitialIssue(selectedIssue);
   }, [selectedIssue]);
   const handleDelete = async (id: string) => {
     try {
@@ -69,6 +83,7 @@ const InspectionIssue = ({
       await removeIssue(id);
       if (selectedIssue?.issueId === id) setSelectedIssue(null);
       toast.success("Issue deleted successfully");
+      reFetchIssue();
       onChange();
     } catch (err: any) {
       toast.error(err.response.data.message);
@@ -78,7 +93,70 @@ const InspectionIssue = ({
     }
   };
 
-  console.log(loading);
+  const handleAddOptionalFieldButton = () => {
+    if (issue?.optionalFields?.length >= 5) {
+      toast.error("Maximum 5 optional fields allowed");
+      return;
+    }
+    setIssue({
+      ...issue,
+      optionalFields: [...issue?.optionalFields, { name: "", value: "" }],
+    });
+  };
+
+  const handleOptionalFieldDelete = async (
+    index: number,
+    optionalField: { id?: string; name: string; value: string },
+  ) => {
+    if (!optionalField.id) {
+      setIssue({
+        ...issue,
+        optionalFields: issue?.optionalFields?.filter((_, i) => i !== index),
+      });
+    } else {
+      try {
+        setLoading(true);
+        await removeOptionalField(selectedIssue.issueId, optionalField.id);
+        toast.success("Issue updated successfully");
+        reFetchIssue();
+        onChange();
+      } catch (err: any) {
+        toast.error(err.response.data.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+  const filteredOptionalFields = issue?.optionalFields?.filter(
+    (field) =>
+      field.name !== "" &&
+      field.value !== "" &&
+      !initialIssue?.optionalFields?.includes(field),
+  );
+
+  const handleUpdateIssue = async () => {
+    try {
+      setLoading(true);
+      await updateIssue(issue);
+      await addOptionalFields(issue.issueId, filteredOptionalFields);
+      toast.success("Issue updated successfully");
+      reFetchIssue();
+      onChange();
+    } catch (err: any) {
+      toast.error(err.response.data.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const isUpdateButtonDisabled = (): boolean => {
+    return (
+      loading ||
+      (issue?.title === initialIssue?.title &&
+        issue?.description === initialIssue?.description &&
+        filteredOptionalFields?.length === 0)
+    );
+  };
 
   return (
     <Modal
@@ -98,7 +176,7 @@ const InspectionIssue = ({
                   className={`flex items-center gap-1 ${issueStatusMap[issue?.status]?.color} text-[10px]`}
                 >
                   {issueStatusMap[issue?.status]?.icon}{" "}
-                  {issue?.status.replace("_", " ")}
+                  {issue?.status?.replace("_", " ")}
                 </Badge>
               </div>
               <span className="text-[10px] text-muted mt-4">Change Status</span>
@@ -251,7 +329,7 @@ const InspectionIssue = ({
               <input
                 value={issue?.title || ""}
                 type="text"
-                className="text-lg font-bold text-primary  leading-tight w-full h-10 p-2 rounded-md focus:outline-none border border-primary/20"
+                className="text-lg font-bold text-primary/50  leading-tight w-full h-10 p-2 rounded-md focus:outline-none border border-primary/20  placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all"
                 onChange={(e) => setIssue({ ...issue, title: e.target.value })}
               />
             </div>
@@ -261,63 +339,90 @@ const InspectionIssue = ({
               </label>
               <textarea
                 value={issue?.description || ""}
-                className="text-primary/50 text-sm leading-relaxed whitespace-pre-wrap text-start w-full h-24 p-2 rounded-md border border-primary/20 resize-none focus:outline-none"
+                className="text-primary/50 text-sm leading-relaxed whitespace-pre-wrap text-start w-full h-24 p-2 rounded-md border border-primary/20 resize-none placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all"
                 onChange={(e) =>
                   setIssue({ ...issue, description: e.target.value })
                 }
               />
             </div>
+            <div className="grid w-full gap-2">
+              {issue?.optionalFields?.map((field, index) => (
+                <div key={index} className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Name"
+                    className="pl-2 pr-2 py-2 h-10 rounded-md border border-primary/20 bg-card/80 text-sm text-primary/50 placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-full"
+                    value={field.name}
+                    onChange={(e) => {
+                      const newFields = [...issue?.optionalFields];
+                      newFields[index].name = e.target.value;
+                      setIssue({ ...issue, optionalFields: newFields });
+                    }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Value"
+                    className="pl-2 pr-2 py-2 h-10 rounded-md border border-primary/20 bg-card/80 text-sm text-primary/50 placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-full"
+                    value={field.value}
+                    onChange={(e) => {
+                      const newFields = [...issue.optionalFields];
+                      newFields[index].value = e.target.value;
+                      setIssue({ ...issue, optionalFields: newFields });
+                    }}
+                  />
+                  <button
+                    onClick={() => handleOptionalFieldDelete(index, field)}
+                    className="p-2.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 font-bold hover:bg-red-500/20 transition-all flex justify-center gap-2"
+                    title="Purge Data"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+
+              <button
+                onClick={handleAddOptionalFieldButton}
+                className="w-full mt-4 border border-accent p-2 rounded-md block text-[11px] font-bold uppercase tracking-widest text-accent bg-accent/30 mb-2 px-1 leading-relaxed whitespace-pre-wrap focus:outline-none hover:bg-accent/50"
+              >
+                + Add Optional Field
+              </button>
+            </div>
             <div className="flex w-full justify-end">
               <button
                 className="btn-primary w-30"
-                disabled={
-                  loading ||
-                  (issue?.title === selectedIssue.title &&
-                    issue?.description === selectedIssue.description)
-                }
+                disabled={isUpdateButtonDisabled()}
                 onClick={async () => {
-                  try {
-                    setLoading(true);
-                    await updateIssue(issue);
-                    toast.success("Issue updated successfully");
-                    setSelectedIssue(null);
-                    onChange();
-                  } catch (err: any) {
-                    toast.error(err.response.data.message);
-                  } finally {
-                    setLoading(false);
-                  }
+                  await handleUpdateIssue();
                 }}
               >
                 Update
               </button>
             </div>
           </div>
+          <button
+            onClick={() => setConfirmDeleteOpen(true)}
+            className="w-full p-2.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 font-bold hover:bg-red-500/20 transition-all flex justify-center gap-2"
+            title="Purge Data"
+          >
+            <label className="block text-[12px] font-bold uppercase tracking-widestpx-1">
+              Delete Issue
+            </label>
+            <Trash2 className="w-4 h-4" />
+          </button>
           <div className="flex w-full justify-between items-center">
-            <div className="flex gap-5">
-              <div className="flex gap-2 align-center">
-                <IconClock className="w-4 h-4" />
-                <p className="text-ink-primary text-xs font-mono">
-                  {format(
-                    new Date(selectedIssue.createdAt),
-                    "yyyy-MM-dd HH:mm",
-                  )}
-                </p>
-              </div>
-              <div className="flex gap-2 align-center">
-                <User className="w-4 h-4" />
-                <p className="text-ink-primary text-xs font-mono">
-                  {selectedIssue.author.userId}
-                </p>
-              </div>
+            <div className="flex gap-2 align-center">
+              <IconClock className="w-4 h-4" />
+              <p className="text-ink-primary text-xs font-mono">
+                {format(new Date(selectedIssue.createdAt), "yyyy-MM-dd HH:mm")}
+              </p>
             </div>
-            <button
-              onClick={() => setConfirmDeleteOpen(true)}
-              className="px-4 py-2.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 font-bold hover:bg-red-500/20 transition-all"
-              title="Purge Data"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
+            <div className="flex gap-2 align-center">
+              <User className="w-4 h-4" />
+              <p className="text-ink-primary text-xs font-mono">
+                {selectedIssue.author.userId}
+              </p>
+            </div>
+
             <DeleteConfirm
               confirmDeleteOpen={confirmDeleteOpen}
               setConfirmDeleteOpen={setConfirmDeleteOpen}

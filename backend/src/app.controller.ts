@@ -131,7 +131,7 @@ export class AppController {
   @Get('/get-issue-by-id')
   @UseGuards(JwtAuthGuard)
   async getIssueById(@Query('issueId') issueId: string, @Req() req: any) {
-    return await this.mainService.getAllIssuesByUserId(issueId);
+    return await this.mainService.getIssueById(issueId);
   }
 
   @Delete('/remove-issue')
@@ -148,6 +148,39 @@ export class AppController {
     @Req() req: any,
   ) {
     return await this.mainService.updateIssue(issue);
+  }
+
+  @Post('/add-optional-field')
+  @UseGuards(JwtAuthGuard)
+  async addOptionalField(
+    @Body()
+    data: {
+      issueId: string;
+      optionalField: { name: string; value: string }[];
+    },
+    @Req() req: any,
+  ) {
+    const optionalFields = data?.optionalField?.map((field) => {
+      return {
+        id: Math.random().toString(36).substring(2, 15),
+        name: field.name,
+        value: field.value,
+      };
+    });
+    return await this.mainService.addOptionalFields(
+      data.issueId,
+      optionalFields,
+    );
+  }
+
+  @Delete('/remove-optional-field')
+  @UseGuards(JwtAuthGuard)
+  async removeOptionalField(
+    @Query('issueId') issueId: string,
+    @Query('optionalFieldId') optionalFieldId: string,
+    @Req() req: any,
+  ) {
+    return await this.mainService.removeOptionalField(issueId, optionalFieldId);
   }
 
   // @Post('/save-feed')

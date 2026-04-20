@@ -1,13 +1,3 @@
-// export enum LoginStatus {
-//   Success = 'SUCCESS',
-//   Failed = 'FAILED',
-// }
-
-// export enum AccountStatus {
-//   Online = 'ONLINE',
-//   Offline = 'OFFLINE',
-// }
-
 export type IssueDto = {
   issueId: string;
   author: UserDto;
@@ -17,6 +7,7 @@ export type IssueDto = {
   status: IssueStatus;
   priority: IssuePriority;
   severity: IssueSeverity;
+  optionalFields?: { id: string; name: string; value: string }[];
 };
 
 export type UserDto = {

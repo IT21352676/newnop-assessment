@@ -253,7 +253,7 @@ const Kanban = () => {
     <div className="flex-1 flex flex-col ">
       <main className="w-full mx-auto py-10 overflow-y-auto">
         <div className="grid space-y-8 mb-4">
-          <div className="flex justify-between gap-3 w-full">
+          <div className="flex justify-between gap-3 w-full flex-wrap">
             <CreateIssue
               isOpen={isCreatingModalOpen}
               onClose={() => setIsCreatingModalOpen(false)}
@@ -283,7 +283,7 @@ const Kanban = () => {
                 </button>
               )}
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <div className="relative flex items-center">
                 <CalendarDays className="absolute left-3 w-4 h-4 text-muted pointer-events-none" />
                 <input

@@ -7,6 +7,7 @@ export type Issue = {
   status: IssueStatus;
   priority: IssuePriority;
   severity: IssueSeverity;
+  optionalFields?: { id?: string; name: string; value: string }[];
 };
 
 export type User = {
