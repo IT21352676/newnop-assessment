@@ -25,7 +25,7 @@ const AISuggestion = ({
           <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center mb-2">
             <Bot className="w-6 h-6 text-white" />
           </div>
-          <div className="prose max-w-none text-left">
+          <div className="prose max-w-none">
             <ReactMarkdown>{aiSuggestion?.suggestions?.content}</ReactMarkdown>
           </div>
         </div>
