@@ -194,7 +194,7 @@ const InspectionIssue = ({
     >
       {selectedIssue && (
         <div className="space-y-6">
-          <div className="flex bg-card p-4 rounded-xl align-center justify-between">
+          <div className="flex flex-col sm:flex-row  bg-card p-4 rounded-xl align-center justify-between gap-4">
             <div className="flex flex-col gap-2 justify-between border border-dashed border-primary/20 p-4 rounded-lg">
               <span className="font-bold uppercase tracking-wide text-[12px]">
                 Status

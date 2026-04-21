@@ -47,8 +47,6 @@ function getSeverityColor(val: string): ColorKey {
   return "gray";
 }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
 const Badge = ({ label, colorKey }: { label: string; colorKey: ColorKey }) => {
   const { bg, text } = COLOR_MAP[colorKey];
   return (
@@ -153,8 +151,6 @@ const AreaTag = ({ label }: { label: string }) => (
   </span>
 );
 
-// ─── Main component ───────────────────────────────────────────────────────────
-
 interface TriageReportProps {
   data: TriageResult;
 }
@@ -233,10 +229,13 @@ export default function TriageReport({ data }: TriageReportProps) {
               Issue lacks sufficient detail — root cause analysis skipped
             </p>
             {data.missingInfo.length > 0 && (
-              <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+              <ul
+                style={{ listStyle: "none" }}
+                className="justify-items-start mt-4"
+              >
                 {data.missingInfo.map((m, i) => (
                   <li
-                    className="text-yellow-500"
+                    className="text-yellow-500 "
                     key={i}
                     style={{ fontSize: 13, padding: "2px 0" }}
                   >

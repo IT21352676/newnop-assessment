@@ -101,38 +101,37 @@ const SortableIssueCard = ({
           #{issue.issueId.toString().padStart(4, "0")}
         </span>
         <Badge
-          className={`flex items-center gap-1 ${issuePriorityMap[issue.priority].color} border border-border-custom text-[10px]`}
+          className={`flex items-center gap-1 ${issuePriorityMap[issue.priority].color} border border-border-custom text-[8px] sm:text-[10px]`}
         >
           {issue.priority} {issuePriorityMap[issue.priority].icon}
         </Badge>
       </div>
       <h4 className="text-[16px] font-semibold text-ink-primary line-clamp-2 mb-2 leading-snug text-start mt-4 truncate">
-        {issue.title}dsadsadasdsdsadsadsadsadasdsadsadas
+        {issue.title}
       </h4>
 
-      <div className="bg-primary/10 rounded-md p-2 mb-2 min-h-15">
+      <div className="bg-primary/10 rounded-md p-2 mb-3 min-h-15">
         <p className="text-[12px] text-ink-primary line-clamp-2 text-start wrap-break-word">
           {issue.description}
-          dsdsadsadsadsadsadkjsadsahdjksahdjksahdkjsahdkjsahdkjsahdjksahdjksadhksjadhsajkdhsajkdhsajkdhsakjdhaskdhsajkdhsakjdhsajkdhsjksamdbsmnadbsamndbsamb
         </p>
       </div>
-      <div className="flex w-full justify-end mb-2">
+      <div className="flex w-full justify-end mb-3">
         <button
           disabled={isAiLoading}
           className="relative bg-accent/20 text-white p-1.5 rounded-md z-10 flex items-center gap-2 border border-accent/20 hover:bg-accent/30 hover:text-accent transition-colors cursor-pointer"
           onClick={(e) => handleAskAI(e, issue.issueId)}
         >
-          <span className="text-[10px] font-bold tracking-widest text-accent mt-0.25">
+          <span className="text-[8px] sm:text-[10px] font-bold tracking-widest text-accent mt-0.25">
             Ask from AI ?
           </span>
-          <Bot className="w-5 h-5 text-accent/80 animate-bounce" />
+          <Bot className="w-3 h-3 sm:w-5 sm:h-5 text-accent/80 animate-bounce" />
         </button>
       </div>
 
       <div className="flex items-center justify-between mt-auto">
         <div className="flex items-center gap-1.5 overflow-hidden">
           <Badge
-            className={`flex items-center gap-1 ${issueSeverityMap[issue.severity].color} border border-border-custom text-[10px]`}
+            className={`flex items-center gap-1 ${issueSeverityMap[issue.severity].color} border border-border-custom text-[8px] sm:text-[10px]`}
           >
             {issueSeverityMap[issue.severity].icon} {issue.severity}
           </Badge>
@@ -142,7 +141,7 @@ const SortableIssueCard = ({
             <TooltipTrigger asChild>
               <div className="flex items-center gap-1">
                 <User className="w-3 h-3" />
-                <div className="flex justify-center items-center text-[10px] rounded-full border border-primary/20 w-6 h-6 bg-card/80">
+                <div className="flex justify-center items-center text-[8px] sm:text-[10px] rounded-full border border-primary/20 w-5 h-5 sm:w-6 sm:h-6 bg-card/80">
                   {issue.author.userId.charAt(0)}
                 </div>
               </div>

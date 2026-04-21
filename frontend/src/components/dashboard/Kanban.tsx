@@ -315,7 +315,7 @@ const Kanban = () => {
     <div className="flex-1 flex flex-col ">
       <main className="w-full mx-auto py-10 overflow-y-auto">
         <div className="grid space-y-8 mb-4">
-          <div className="flex justify-between gap-3 w-full flex-wrap">
+          <div className="flex sm:justify-between gap-3 w-full flex-wrap">
             <CreateIssue
               isOpen={isCreatingModalOpen}
               onClose={() => setIsCreatingModalOpen(false)}
@@ -328,9 +328,9 @@ const Kanban = () => {
             >
               <button
                 onClick={() => setIsCreatingModalOpen(true)}
-                className="btn-primary flex items-center gap-2 px-6 py-2.5 text-sm"
+                className="btn-primary flex items-center gap-2 px-6 py-2.5 text-xs sm:text-sm"
               >
-                <Plus className="w-5 h-5" /> Create Issue
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Create Issue
               </button>
             </Skeleton>
             <Skeleton loading={loading} className="w-fit">
@@ -341,7 +341,7 @@ const Kanban = () => {
                   placeholder="Search by title or ID…"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9 pr-4 py-2 h-10 rounded-xl border border-primary/20 bg-card/80 text-sm text-primary placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-56"
+                  className="pl-9 pr-4 py-2 h-10 rounded-xl border border-primary/20 bg-card/80 text-xs sm:text-sm text-primary placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-44 sm:w-56"
                 />
                 {searchTerm && (
                   <button
@@ -366,7 +366,7 @@ const Kanban = () => {
                       if (!e.target.value) e.target.type = "text";
                     }}
                     onChange={(e) => setDateFrom(e.target.value)}
-                    className="pl-9 pr-8 py-2 h-10 rounded-xl border border-primary/20 bg-card/80 text-sm text-primary placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-44 [color-scheme:dark]"
+                    className="pl-9 pr-8 py-2 h-10 rounded-xl border border-primary/20 bg-card/80 text-xs sm:text-sm text-primary placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-30 sm:w-44 [color-scheme:dark]"
                   />
                   {dateFrom && (
                     <button
@@ -391,7 +391,7 @@ const Kanban = () => {
                       if (!e.target.value) e.target.type = "text";
                     }}
                     onChange={(e) => setDateTo(e.target.value)}
-                    className="pl-9 pr-8 py-2 h-10 rounded-xl border border-primary/20 bg-card/80 text-sm text-primary placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-44 [color-scheme:dark]"
+                    className="pl-9 pr-8 py-2 h-10 rounded-xl border border-primary/20 bg-card/80 text-xs sm:text-sm text-primary placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-30 sm:w-44 [color-scheme:dark]"
                   />
                   {dateTo && (
                     <button
@@ -408,7 +408,7 @@ const Kanban = () => {
             <Popover>
               <Skeleton loading={loading} className="w-fit">
                 <PopoverTrigger asChild>
-                  <button className="btn-secondary flex items-center gap-2 px-5 py-2.5 text-sm">
+                  <button className="btn-secondary flex items-center gap-2 px-5 py-2.5 text-xs sm:text-sm">
                     <Download className="w-4 h-4" /> Export Data
                   </button>
                 </PopoverTrigger>{" "}
@@ -440,10 +440,10 @@ const Kanban = () => {
                 </span>
               </div>
               <div className="flex overflow-auto w-full">
-                <div className="flex gap-2 items-start custom-scrollbar">
+                <div className="flex gap-2 items-start custom-scrollbar min-w-screen">
                   <button
                     onClick={() => setSelectedUserId(null)}
-                    className={`justify-center items-center text-sm rounded-full border border-primary/20 w-10 h-10 hover:bg-accent/60 ${selectedUserId === null ? "bg-accent/60" : "bg-card/80"}`}
+                    className={`justify-center items-center text-sm rounded-full border border-primary/20 min-w-10 min-h-10 hover:bg-accent/60 ${selectedUserId === null ? "bg-accent/60" : "bg-card/80"}`}
                   >
                     All
                   </button>
@@ -458,7 +458,7 @@ const Kanban = () => {
                           <div className="grid grid-cols-1 justify-center">
                             <button
                               onClick={() => setSelectedUserId(user.userId)}
-                              className={`justify-center items-center text-sm rounded-full border border-primary/20 w-10 h-10 hover:bg-accent/60 ${selectedUserId === user.userId ? "bg-accent/60" : "bg-card/80"}`}
+                              className={`justify-center items-center text-sm rounded-full border border-primary/20 min-w-10 min-h-10 hover:bg-accent/60 ${selectedUserId === user.userId ? "bg-accent/60" : "bg-card/80"}`}
                             >
                               {user.userId.charAt(0)}
                             </button>
@@ -502,12 +502,12 @@ const Kanban = () => {
                 return (
                   <Skeleton
                     loading={loading}
-                    className="min-w-90 min-h-full"
+                    className="min-w-75 sm:min-w-90 min-h-full"
                     className2="flex h-full"
                   >
                     <div
                       key={status}
-                      className="flex flex-col gap-4 min-w-90 bg-card/80 p-4 rounded-2xl mb-4"
+                      className="flex flex-col gap-4 min-w-75 sm:min-w-90 bg-card/80 p-4 rounded-2xl mb-4"
                     >
                       <div className="flex items-center justify-between px-2">
                         <div className="flex items-center gap-2">
