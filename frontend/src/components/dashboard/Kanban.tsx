@@ -406,7 +406,11 @@ const Kanban = () => {
             </Skeleton>
 
             <Popover>
-              <Skeleton loading={loading} className="w-fit">
+              <Skeleton
+                loading={loading}
+                className="flex w-fit"
+                className2="flex h-full"
+              >
                 <PopoverTrigger asChild>
                   <button className="btn-secondary flex items-center gap-2 px-5 py-2.5 text-xs sm:text-sm">
                     <Download className="w-4 h-4" /> Export Data
