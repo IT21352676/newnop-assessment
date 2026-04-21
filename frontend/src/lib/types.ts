@@ -8,6 +8,25 @@ export type Issue = {
   priority: IssuePriority;
   severity: IssueSeverity;
   optionalFields?: { id?: string; name: string; value: string }[];
+  aiSuggestion?: {
+    classification: {
+      type: string;
+      component: string;
+    };
+    prioritySeverity: {
+      currentPriority: string;
+      suggestedPriority: string;
+      currentSeverity: string;
+      suggestedSeverity: string;
+      rationale: string;
+    };
+    isUnclear: true | false;
+    missingInfo: string[];
+    rootCauses: { area: string; cause: string }[];
+    suggestedFixes: string[];
+    debuggingSteps: { step: number; action: string }[];
+    jiraComment: string;
+  };
 };
 
 export type User = {

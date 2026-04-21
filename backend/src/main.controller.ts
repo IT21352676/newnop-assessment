@@ -189,4 +189,18 @@ export class MainController {
   async getAIResponse(@Query('issueId') issueId: string, @Req() req: any) {
     return await this.mainService.getAiSuggestions(issueId);
   }
+  @Post('/save-ai-response')
+  async saveAIResponse(
+    @Body()
+    data: {
+      issueId: string;
+      aiSuggestion: dataInterface.IssueDto['aiSuggestion'];
+    },
+    @Req() req: any,
+  ) {
+    return await this.mainService.saveAiSuggestion(
+      data.issueId,
+      data.aiSuggestion,
+    );
+  }
 }

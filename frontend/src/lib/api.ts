@@ -144,3 +144,14 @@ export async function getAiSuggestions(issueId: string) {
   });
   return response.data;
 }
+
+export async function saveAiSuggestion(
+  issueId: string,
+  aiSuggestion: Issue["aiSuggestion"],
+) {
+  const response = await api.post<Issue | undefined>("/save-ai-response", {
+    issueId,
+    aiSuggestion,
+  });
+  return response.data;
+}

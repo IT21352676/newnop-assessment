@@ -97,4 +97,14 @@ export class MainService {
     }
     return await this.aiService.getAIResponse(issue);
   }
+
+  async saveAiSuggestion(
+    issueId: string,
+    aiSuggestion: IssueDto['aiSuggestion'],
+  ) {
+    return await this.issueDatabaseService.addAiSuggestion(
+      issueId,
+      aiSuggestion,
+    );
+  }
 }

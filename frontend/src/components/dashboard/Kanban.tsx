@@ -72,10 +72,12 @@ const Kanban = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [aiSuggestion, setAiSuggestion] = useState<{
     id: string;
+    issue: Issue;
     suggestions: {
-      content: string;
-      reasoning: string;
-      role: string;
+      jsonContent?: Issue["aiSuggestion"];
+      content?: string;
+      reasoning?: string;
+      role?: string;
     };
   }>();
 
@@ -586,6 +588,7 @@ const Kanban = () => {
             <AISuggestion
               setAiSuggestion={setAiSuggestion}
               aiSuggestion={aiSuggestion}
+              onchange={fetchIssueData}
             />
 
             <DragOverlay

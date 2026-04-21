@@ -127,4 +127,20 @@ export class IssueDatabaseService {
     };
     return this.issueRepository.save(updatedIssue);
   }
+
+  async addAiSuggestion(
+    issueId: string,
+    aiSuggestion: IssueDto['aiSuggestion'],
+  ): Promise<Issue> {
+    const existingIssue = await this.findById(issueId);
+    if (!existingIssue) {
+      throw new Error('Issue not found');
+    }
+
+    const updatedIssue: Issue = {
+      ...existingIssue,
+      aiSuggestion: aiSuggestion,
+    };
+    return this.issueRepository.save(updatedIssue);
+  }
 }

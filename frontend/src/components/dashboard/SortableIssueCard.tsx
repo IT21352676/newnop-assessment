@@ -22,10 +22,12 @@ const SortableIssueCard = ({
   setAiSuggestion: (
     aiSuggestion: {
       id: string;
+      issue: Issue;
       suggestions: {
-        content: string;
-        reasoning: string;
-        role: string;
+        jsonContent?: Issue["aiSuggestion"];
+        content?: string;
+        reasoning?: string;
+        role?: string;
       };
     } | null,
   ) => void;
@@ -64,11 +66,22 @@ const SortableIssueCard = ({
   const handleAskAI = async (e: React.MouseEvent, issueId: string) => {
     setIsAiLoading(true);
     e.stopPropagation();
+    if (issue.aiSuggestion) {
+      setAiSuggestion({
+        id: issueId,
+        issue: issue,
+        suggestions: { jsonContent: issue.aiSuggestion },
+      });
+      toast.success("Getting saved AI suggestions ...");
+      setIsAiLoading(false);
+      return;
+    }
     try {
       toast.loading("Analyzing your issue...");
       const response = await getAiSuggestions(issueId);
       setAiSuggestion({
         id: issueId,
+        issue: issue,
         suggestions: response,
       });
       toast.dismiss();

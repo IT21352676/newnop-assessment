@@ -33,4 +33,25 @@ export class Issue {
 
   @Column({ type: 'json', nullable: true })
   optionalFields?: { id: string; name: string; value: string }[];
+
+  @Column({ type: 'json', nullable: true })
+  aiSuggestion?: {
+    classification: {
+      type: string;
+      component: string;
+    };
+    prioritySeverity: {
+      currentPriority: string;
+      suggestedPriority: string;
+      currentSeverity: string;
+      suggestedSeverity: string;
+      rationale: string;
+    };
+    isUnclear: true | false;
+    missingInfo: string[];
+    rootCauses: { area: string; cause: string }[];
+    suggestedFixes: string[];
+    debuggingSteps: { step: number; action: string }[];
+    jiraComment: string;
+  };
 }
