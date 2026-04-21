@@ -546,7 +546,7 @@ const Kanban = () => {
                           </DroppableColumn>
                         </SortableContext>
                       </div>
-                      <div className="relative top-[-250px] p-4 z-0 rounded-2xl mb-4 z-0 max-w-90 grid grid-cols-1 justify-center items-center border-2 border-dashed border-primary/10 gap-4">
+                      <div className="relative top-[-50%] p-4 z-0 rounded-2xl mb-4 z-0 max-w-90 grid grid-cols-1 justify-center items-center border-2 border-dashed border-primary/10 gap-4">
                         <div className="flex justify-center items-center">
                           <IconDragDrop className="w-8 h-8 text-primary/10" />
                         </div>
