@@ -30,7 +30,7 @@ const DeleteConfirm = ({
             Are you sure you want to permanently delete{" "}
             <span className="font-bold text-red-400">
               #{selectedIssue?.issueId?.toString().padStart(4, "0")}
-            </span>
+            </span>{" "}
             ?
           </p>
           <p className="text-ink-muted text-xs text-center">

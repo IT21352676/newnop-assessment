@@ -8,8 +8,14 @@ import {
 } from "./types";
 import { useAuthStore } from "./store";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
+if (!apiUrl) {
+  throw new Error("VITE_API_URL is not defined in .env file");
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: apiUrl,
 });
 
 api.interceptors.request.use((config) => {
@@ -25,7 +31,6 @@ export async function registerUser(user: User) {
     "/register",
     user,
   );
-
   return response.data;
 }
 
@@ -82,6 +87,13 @@ export async function getAllIssues() {
   return response.data;
 }
 
+export async function getIssueById(issueId: string) {
+  const response = await api.get<Issue | undefined>("/get-issue-by-id", {
+    params: { issueId },
+  });
+  return response.data;
+}
+
 export async function updateIssue(issue: Issue) {
   const response = await api.put<Issue | undefined>("/update-issue", issue);
   return response.data;
@@ -89,6 +101,45 @@ export async function updateIssue(issue: Issue) {
 
 export async function removeIssue(issueId: string) {
   const response = await api.delete<Issue | undefined>("/remove-issue", {
+    params: { issueId },
+  });
+  return response.data;
+}
+
+export async function getOptionalFieldCount() {
+  const response = await api.get<number>("/optional-field-count");
+  return response.data;
+}
+
+export async function addOptionalFields(
+  issueId: string,
+  optionalField: { name: string; value: string }[],
+) {
+  const response = await api.post<Issue | undefined>("/add-optional-field", {
+    issueId,
+    optionalField,
+  });
+  return response.data;
+}
+export async function removeOptionalField(
+  issueId: string,
+  optionalFieldId: string,
+) {
+  const response = await api.delete<Issue | undefined>(
+    "/remove-optional-field",
+    {
+      params: { issueId, optionalFieldId },
+    },
+  );
+  return response.data;
+}
+
+export async function getAiSuggestions(issueId: string) {
+  const response = await api.get<{
+    content: string;
+    reasoning: string;
+    role: string;
+  }>("/ai-response", {
     params: { issueId },
   });
   return response.data;

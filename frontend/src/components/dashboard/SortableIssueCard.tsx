@@ -1,21 +1,34 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { format } from "date-fns";
-import { Clock, User } from "lucide-react";
-import React from "react";
+import { Bot, Clock, User } from "lucide-react";
+import React, { useState } from "react";
 import { Issue } from "../../lib/types";
 import Badge from "../ui/Badge";
 import { issuePriorityMap, issueSeverityMap } from "../../lib/utils";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/Tooltip";
+import { getAiSuggestions } from "@/lib/api";
+import { toast } from "react-toastify";
 
 const SortableIssueCard = ({
   issue,
   onClick,
   isOverlay,
+  setAiSuggestion,
 }: {
   issue: Issue;
   onClick: (issue: Issue) => void;
   isOverlay?: boolean;
+  setAiSuggestion: (
+    aiSuggestion: {
+      id: string;
+      suggestions: {
+        content: string;
+        reasoning: string;
+        role: string;
+      };
+    } | null,
+  ) => void;
 }) => {
   const {
     attributes,
@@ -42,10 +55,38 @@ const SortableIssueCard = ({
       <div
         ref={setNodeRef}
         style={style}
-        className="w-full h-[200px] bg-card/20 border border-dashed border-border-custom rounded-xl opacity-50"
+        className="w-full h-[230px] bg-card/20 border border-dashed border-accent/50 rounded-xl"
       />
     );
   }
+
+  const [isAiLoading, setIsAiLoading] = useState(false);
+
+  const handleAskAI = async (e: React.MouseEvent, issueId: string) => {
+    setIsAiLoading(true);
+    e.stopPropagation();
+    try {
+      toast.loading("Analyzing your issue...");
+      const response = await getAiSuggestions(issueId);
+      setAiSuggestion({
+        id: issueId,
+        suggestions: response,
+      });
+      toast.dismiss();
+      toast.success("AI suggestions are ready!");
+    } catch (err: any) {
+      toast.dismiss();
+      toast.error(
+        err.response
+          ? err.response.data.message
+            ? err.response.data.message
+            : err.response
+          : "Something went wrong",
+      );
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
 
   return (
     <div
@@ -54,7 +95,7 @@ const SortableIssueCard = ({
       {...attributes}
       {...listeners}
       onClick={() => onClick(issue)}
-      className={`h-[200px] group w-full bg-black/30  p-4 rounded-xl cursor-grab active:cursor-grabbing hover:border-ink-muted/30 transition-all ${isOverlay ? "shadow-2xl ring-2 ring-accent" : ""}`}
+      className={`h-[230px] group w-full bg-black p-4 rounded-xl cursor-grab active:cursor-grabbing hover:border-ink-muted/30 transition-all touch-none ${isOverlay ? "shadow-2xl ring-2 ring-accent" : ""}`}
     >
       <div className="flex items-center justify-between mb-2">
         <span className="text-[11px] font-mono text-ink-muted group-hover:text-accent font-medium uppercase tracking-widest">
@@ -70,11 +111,24 @@ const SortableIssueCard = ({
         {issue.title}
       </h4>
 
-      <div className="bg-card/70 rounded-md p-2 mb-4 min-h-15">
+      <div className="bg-card/70 rounded-md p-2 mb-2 min-h-15">
         <p className="text-[12px] text-ink-primary line-clamp-2 text-start wrap-break-word">
           {issue.description}
         </p>
       </div>
+      <div className="flex w-full justify-end mb-2">
+        <button
+          disabled={isAiLoading}
+          className="relative bg-accent/20 text-white p-1.5 rounded-md z-10 flex items-center gap-2 border border-accent/20 hover:bg-accent/30 hover:text-accent transition-colors cursor-pointer"
+          onClick={(e) => handleAskAI(e, issue.issueId)}
+        >
+          <span className="text-[10px] font-bold tracking-widest text-accent mt-0.25">
+            Ask from AI ?
+          </span>
+          <Bot className="w-5 h-5 text-accent/80 animate-bounce" />
+        </button>
+      </div>
+
       <div className="flex items-center justify-between mt-auto">
         <div className="flex items-center gap-1.5 overflow-hidden">
           <Badge
@@ -93,7 +147,7 @@ const SortableIssueCard = ({
                 </div>
               </div>
             </TooltipTrigger>
-            <TooltipContent className="bg-accent">
+            <TooltipContent className="bg-accent" side="bottom">
               <p>{issue.author.userId}</p>
             </TooltipContent>
           </Tooltip>

@@ -1,7 +1,11 @@
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import { User } from './user.object';
-import { IssuePriority, IssueSeverity, IssueStatus } from 'src/interfaces/types';
+import {
+  IssuePriority,
+  IssueSeverity,
+  IssueStatus,
+} from 'src/interfaces/types';
 
 @Entity()
 export class Issue {
@@ -13,21 +17,24 @@ export class Issue {
   })
   author: User;
 
-  @Column({ type: 'varchar', length:200})
+  @Column({ type: 'varchar', length: 200 })
   title: string;
 
-  @Column({ type: 'varchar', length:500})
+  @Column({ type: 'varchar', length: 500 })
   description: string;
 
-  @Column({ type: 'varchar'})
+  @Column({ type: 'varchar' })
   createdAt: string;
 
   @Column({ type: 'varchar' })
   status: IssueStatus;
 
-  @Column({ type: 'varchar'})
+  @Column({ type: 'varchar' })
   priority: IssuePriority;
 
-  @Column({ type: 'varchar'})
+  @Column({ type: 'varchar' })
   severity: IssueSeverity;
+
+  @Column({ type: 'json', nullable: true })
+  optionalFields?: { id: string; name: string; value: string }[];
 }

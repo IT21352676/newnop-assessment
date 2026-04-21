@@ -11,12 +11,39 @@ const Register = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const validatePassword = (pwd: string) => {
+    const newErrors = [];
+
+    if (pwd.length < 8) {
+      newErrors.push("Minimum 8 characters");
+    }
+    if (!/[A-Z]/.test(pwd)) {
+      newErrors.push("At least one uppercase letter");
+    }
+    if (!/[a-z]/.test(pwd)) {
+      newErrors.push("At least one lowercase letter");
+    }
+    if (!/[0-9]/.test(pwd)) {
+      newErrors.push("At least one number");
+    }
+    if (!/[!@#$%^&*]/.test(pwd)) {
+      newErrors.push("At least one special character");
+    }
+
+    return newErrors;
+  };
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+    setErrors(validatePassword(value));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
     try {
       const user: User = {
@@ -27,7 +54,13 @@ const Register = () => {
       toast.success(response.message);
       navigate("/login");
     } catch (err: any) {
-      toast.error(err.response.data.message);
+      toast.error(
+        err.response
+          ? err.response.data.message
+            ? err.response.data.message
+            : err.response
+          : "Something went wrong",
+      );
     } finally {
       setLoading(false);
     }
@@ -42,7 +75,7 @@ const Register = () => {
       >
         <div className="mb-8 text-center">
           <div className="w-16 h-16 bg-accent rounded-2xl shadow-[0_0_30px_rgba(99,102,241,0.3)] flex items-center justify-center mx-auto mb-6">
-            <Logo className="w-9 h-9" />
+            <Logo className="w-9 h-9" isColors={false} />
           </div>
           <h2 className="text-3xl font-bold text-primary tracking-tight">
             FlopNop
@@ -76,16 +109,25 @@ const Register = () => {
               placeholder="••••••••"
               required
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleChange}
             />
           </div>
-          {error && (
-            <p className="text-red-500 text-xs font-medium px-1">{error}</p>
+          {errors.length > 0 && (
+            <ul className="text-[11px] text-red-500/60 list-disc ml-4 font-bold tracking-wide">
+              {errors.map((err, index) => (
+                <li key={index}>{err}</li>
+              ))}
+            </ul>
+          )}
+          {errors.length === 0 && password && (
+            <ul className="text-[11px] text-green-500/60 list-disc ml-4 font-bold tracking-wide">
+              <li>Strong password</li>
+            </ul>
           )}
           <button
             type="submit"
             disabled={loading}
-            className="btn-primary w-full py-3 text-sm font-bold uppercase tracking-widest mt-6"
+            className="btn-primary w-full py-3 text-sm font-bold uppercase tracking-widest mt-2"
           >
             {loading ? "Validating..." : "Register"}
           </button>

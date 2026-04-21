@@ -13,7 +13,6 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      {" "}
       <TooltipProvider>
         <Routes>
           <Route
@@ -42,7 +41,8 @@ export default function App() {
         <ToastContainer
           aria-label="Toast notifications container"
           position="top-right"
-          autoClose={1000}
+          autoClose={2000}
+          closeButton={false}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick={false}
@@ -51,7 +51,7 @@ export default function App() {
           draggable
           pauseOnHover
           theme="dark"
-        />{" "}
+        />
       </TooltipProvider>
     </BrowserRouter>
   );

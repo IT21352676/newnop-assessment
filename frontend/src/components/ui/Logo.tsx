@@ -1,9 +1,61 @@
 import { motion, AnimatePresence } from "motion/react";
+import type { Transition } from "motion/react";
 import { Bug, BugPlay, BugOff } from "lucide-react";
 import { useState, useEffect } from "react";
+import { IconCircleDashedCheck, IconSearch } from "@tabler/icons-react";
 
-const Logo = ({ className = "w-5 h-5" }: { className?: string }) => {
-  const icons = [Bug, BugPlay, BugOff];
+const icons: {
+  Icon: React.ElementType;
+  color: string;
+  animate: Record<string, number[]>;
+  transition: Transition;
+}[] = [
+  {
+    Icon: IconSearch,
+    color: "text-blue-500",
+    animate: { scale: [1, 1.15, 1] },
+    transition: { duration: 1.8, repeat: Infinity, ease: "easeInOut" },
+  },
+  {
+    Icon: Bug,
+    color: "text-red-500",
+    animate: { x: [0, -3, 3, -2, 2, 0], rotate: [0, -5, 5, -3, 3, 0] },
+    transition: { duration: 0.6, repeat: Infinity, ease: "easeInOut" },
+  },
+  {
+    Icon: BugPlay,
+    color: "text-amber-500",
+    animate: { y: [0, -6, -2, 0] },
+    transition: { duration: 0.8, repeat: Infinity, ease: "easeInOut" },
+  },
+  {
+    Icon: BugOff,
+    color: "text-indigo-500",
+    animate: { scale: [1, 1.1, 0.6, 1], opacity: [1, 1, 0.2, 1] },
+    transition: { duration: 1.0, repeat: Infinity, ease: "easeInOut" },
+  },
+  {
+    Icon: IconCircleDashedCheck,
+    color: "text-emerald-500",
+    animate: { scale: [1, 1.35, 0.9, 1.2, 1] },
+    transition: {
+      duration: 0.4,
+      repeat: Infinity,
+      repeatDelay: 1.2,
+      ease: "easeOut",
+    },
+  },
+];
+
+const Logo = ({
+  className = "w-5 h-5",
+  isColors = true,
+  isAnimated = true,
+}: {
+  className?: string;
+  isColors?: boolean;
+  isAnimated?: boolean;
+}) => {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -13,7 +65,7 @@ const Logo = ({ className = "w-5 h-5" }: { className?: string }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const ActiveIcon = icons[index];
+  const { Icon, color, animate, transition } = icons[index];
 
   return (
     <div className="relative overflow-hidden flex items-center justify-center">
@@ -26,7 +78,12 @@ const Logo = ({ className = "w-5 h-5" }: { className?: string }) => {
           transition={{ duration: 0.5, ease: "circOut" }}
           className="flex items-center justify-center"
         >
-          <ActiveIcon className={`${className} text-white`} />
+          <motion.div
+            animate={isAnimated && animate}
+            transition={isAnimated && transition}
+          >
+            <Icon className={`${className} ${isColors && color}`} />
+          </motion.div>
         </motion.div>
       </AnimatePresence>
     </div>

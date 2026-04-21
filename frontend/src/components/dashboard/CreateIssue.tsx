@@ -63,7 +63,13 @@ const CreateIssue = ({
       setIssue({});
       onClose();
     } catch (err: any) {
-      toast.error(err.response.data.message);
+      toast.error(
+        err.response
+          ? err.response.data.message
+            ? err.response.data.message
+            : err.response
+          : "Something went wrong",
+      );
     } finally {
       setLoading(false);
     }

@@ -16,14 +16,14 @@ const Topbar = () => {
     navigate("/login");
   };
   return (
-    <nav className="flex justify-between items-center mb-4 glass-panel px-8 py-4 rounded-2xl">
+    <nav className="flex sm:justify-between items-center mb-4 glass-panel px-8 py-4 rounded-2xl flex-wrap justify-center w-full gap-8">
       <div className="flex items-center gap-3">
         <Logo className="w-8 h-8 text-accent" />
         <h1 className="text-xl font-bold text-primary tracking-tight">
           FlopNop
         </h1>
       </div>
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-6 flex-wrap justify-center sm:justify-end">
         <div className="text-right">
           <div className="flex items-center gap-2">
             <User className="w-4 h-4 text-muted" />
