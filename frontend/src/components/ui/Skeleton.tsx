@@ -2,10 +2,12 @@ import { cn } from "@/lib/utils";
 
 function Skeleton({
   className,
+  className2,
   children,
   loading,
 }: {
   className?: string;
+  className2?: string;
   children?: React.ReactNode;
   loading?: boolean;
 }) {
@@ -16,7 +18,9 @@ function Skeleton({
         className,
       )}
     >
-      <div style={{ opacity: loading ? 0 : 1 }}>{children}</div>
+      <div style={{ opacity: loading ? 0 : 1 }} className={className2}>
+        {children}
+      </div>
     </div>
   );
 }

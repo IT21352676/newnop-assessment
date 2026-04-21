@@ -321,7 +321,11 @@ const Kanban = () => {
               onClose={() => setIsCreatingModalOpen(false)}
             />
 
-            <Skeleton loading={loading} className="w-fit">
+            <Skeleton
+              loading={loading}
+              className="flex w-fit"
+              className2="flex h-full"
+            >
               <button
                 onClick={() => setIsCreatingModalOpen(true)}
                 className="btn-primary flex items-center gap-2 px-6 py-2.5 text-sm"
@@ -496,7 +500,11 @@ const Kanban = () => {
                   (i) => i.status === status,
                 );
                 return (
-                  <Skeleton loading={loading} className="min-w-90">
+                  <Skeleton
+                    loading={loading}
+                    className="min-w-90 min-h-full"
+                    className2="flex h-full"
+                  >
                     <div
                       key={status}
                       className="flex flex-col gap-4 min-w-90 bg-card/80 p-4 rounded-2xl mb-4"
