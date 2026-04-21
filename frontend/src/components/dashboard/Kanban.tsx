@@ -507,6 +507,7 @@ const Kanban = () => {
                 );
                 return (
                   <Skeleton
+                    key={status}
                     loading={loading}
                     className="min-w-75 sm:min-w-90 min-h-full"
                     className2="flex h-full"

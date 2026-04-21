@@ -1,3 +1,4 @@
+import { Issue } from "@/lib/types";
 import React, { useState } from "react";
 
 export interface TriageResult {
@@ -74,7 +75,7 @@ const SectionLabel = ({ children }: { children: React.ReactNode }) => (
       fontSize: 11,
       letterSpacing: "0.08em",
       textTransform: "uppercase",
-      marginBottom: 8,
+      marginBottom: 4,
     }}
   >
     {children}
@@ -153,9 +154,10 @@ const AreaTag = ({ label }: { label: string }) => (
 
 interface TriageReportProps {
   data: TriageResult;
+  issue: Issue;
 }
 
-export default function TriageReport({ data }: TriageReportProps) {
+export default function TriageReport({ data, issue }: TriageReportProps) {
   const [copied, setCopied] = useState(false);
 
   const pc = getPriorityColor(data.prioritySeverity.currentPriority);
@@ -205,6 +207,23 @@ export default function TriageReport({ data }: TriageReportProps) {
         {data.classification.component && (
           <Badge label={data.classification.component} colorKey="gray" />
         )}
+      </div>
+      <div className="mb-4">
+        <SectionLabel>Issue Identifier / Title</SectionLabel>
+        <h1 className="text-primary/90 text-[20px] wrap-break-word font-extrabold truncate px-4 ">
+          {issue?.title}
+        </h1>
+      </div>
+
+      <div className="mb-4">
+        <SectionLabel>Technical Disposition</SectionLabel>
+        <div className="bg-card/10  border border-primary/10 rounded-xl p-4">
+          <div className="max-h-[200px] min-h-[100px] overflow-y-auto">
+            <p className="text-primary/50 text-[13px] wrap-break-word px-4">
+              {issue?.description}
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Unclear banner */}
