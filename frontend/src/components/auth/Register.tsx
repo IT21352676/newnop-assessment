@@ -44,6 +44,10 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (errors.length > 0) {
+      toast.error("Please use strong password");
+      return;
+    }
     setLoading(true);
     try {
       const user: User = {
