@@ -1,3 +1,4 @@
+import { Bot } from "lucide-react";
 import { motion } from "motion/react";
 
 const Hero = () => {
@@ -9,9 +10,15 @@ const Hero = () => {
     >
       <div className="max-w-2xl mx-auto">
         <h2 className="text-4xl font-bold text-primary mb-6">Welcome back</h2>
-        <p className="text-secondary text-lg leading-relaxed mb-8">
-          You are now in the debug environment. Start monitoring issues and
-          manage deployments.
+        <span className="flex items-center gap-2 justify-center">
+          <p className="text-secondary text-lg leading-relaxed">
+            You are now in the debug environment. Start monitoring issues, get
+            AI{" "}
+          </p>
+          <Bot className="w-6 h-6 text-accent/80 animate-bounce" />
+        </span>
+        <p className="text-secondary text-lg leading-relaxed">
+          suggestions, manage deployments and so much more.
         </p>
       </div>
     </motion.div>

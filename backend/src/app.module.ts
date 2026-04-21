@@ -11,6 +11,7 @@ import { AuthService } from './services/auth.service';
 import { IssueDatabaseService } from './services/database/issue.database.service';
 import { UserDatabaseService } from './services/database/user.database.service';
 import { MainService } from './services/main.service';
+import { AIService } from './services/ai.service';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { MainService } from './services/main.service';
     IssueDatabaseService,
     AuthService,
     MainService,
+    AIService,
   ],
 })
 export class AppModule {}

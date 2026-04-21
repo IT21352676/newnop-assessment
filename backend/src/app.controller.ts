@@ -184,4 +184,9 @@ export class AppController {
   ) {
     return await this.mainService.removeOptionalField(issueId, optionalFieldId);
   }
+
+  @Get('/ai-response')
+  async getAIResponse(@Query('issueId') issueId: string, @Req() req: any) {
+    return await this.mainService.getAiSuggestions(issueId);
+  }
 }

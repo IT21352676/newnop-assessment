@@ -391,7 +391,7 @@ const InspectionIssue = ({
             </div>
             <div className="grid w-full gap-2">
               {issue?.optionalFields?.map((field, index) => (
-                <div key={index} className="flex gap-2">
+                <div key={index} className="flex gap-2 mb-2">
                   <input
                     type="text"
                     placeholder="Name"
@@ -426,7 +426,7 @@ const InspectionIssue = ({
 
               <button
                 onClick={handleAddOptionalFieldButton}
-                className="w-full mt-4 border border-accent p-2 rounded-md block text-[11px] font-bold uppercase tracking-widest text-accent bg-accent/30 mb-2 px-1 leading-relaxed whitespace-pre-wrap focus:outline-none hover:bg-accent/50"
+                className="w-full border border-accent p-2 rounded-md block text-[11px] font-bold uppercase tracking-widest text-accent bg-accent/30 px-1 leading-relaxed whitespace-pre-wrap focus:outline-none hover:bg-accent/50"
               >
                 + Add Optional Field
               </button>

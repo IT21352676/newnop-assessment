@@ -6,6 +6,7 @@ import {
   DragOverlay,
   DragStartEvent,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -20,6 +21,7 @@ import {
   IconUsersGroup,
 } from "@tabler/icons-react";
 import {
+  Bot,
   CalendarDays,
   ChevronLeft,
   ChevronRight,
@@ -47,6 +49,9 @@ import DroppableColumn from "../ui/DroppableColumn";
 import ScrollIndicator from "../ui/ScrollIndicator";
 import Modal from "../ui/Modal";
 import StatusConfirm from "./UpdateStatus";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import AISuggestion from "./AISuggestion";
 
 const Kanban = () => {
   const { issues, setIssues, loading, setLoading } = useIssueStore();
@@ -64,6 +69,14 @@ const Kanban = () => {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [aiSuggestion, setAiSuggestion] = useState<{
+    id: string;
+    suggestions: {
+      content: string;
+      reasoning: string;
+      role: string;
+    };
+  }>();
 
   const checkScrollAvailability = () => {
     if (scrollContainerRef.current) {
@@ -130,6 +143,12 @@ const Kanban = () => {
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 5,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 100,
+        tolerance: 5,
       },
     }),
   );
@@ -478,7 +497,7 @@ const Kanban = () => {
                           {status.replace("_", " ")}
                         </h3>
                       </div>
-                      <span className="text-[10px] font-mono text-white/50 bg-bg-card/50 px-2 py-0.5 rounded border border-border-custom">
+                      <span className="text-[10px] font-mono text-white/50 bg-bg-card/50 px-2 py-0.5 rounded border border-primary/20">
                         {columnIssues.length}
                       </span>
                     </div>
@@ -495,13 +514,14 @@ const Kanban = () => {
                                 key={issue.issueId}
                                 issue={issue}
                                 onClick={(issue) => setSelectedIssue(issue)}
+                                setAiSuggestion={setAiSuggestion}
                               />
                             ))}
                           </div>
                         </DroppableColumn>
                       </SortableContext>
                     </div>
-                    <div className="relative top-[-250px] p-4 rounded-2xl mb-4 z-0 max-w-90 grid grid-cols-1 justify-center items-center border-2 border-dashed border-primary/10 gap-4">
+                    <div className="relative top-[-250px] p-4 z-0 rounded-2xl mb-4 z-0 max-w-90 grid grid-cols-1 justify-center items-center border-2 border-dashed border-primary/10 gap-4">
                       <div className="flex justify-center items-center">
                         <IconDragDrop className="w-8 h-8 text-primary/10" />
                       </div>
@@ -532,6 +552,12 @@ const Kanban = () => {
               selectedIssue={selectedIssue}
               onUpdate={fetchIssueData}
             />
+
+            <AISuggestion
+              setAiSuggestion={setAiSuggestion}
+              aiSuggestion={aiSuggestion}
+            />
+
             <DragOverlay
               dropAnimation={{
                 sideEffects: defaultDropAnimationSideEffects({
@@ -548,6 +574,7 @@ const Kanban = () => {
                   issue={activeIssue}
                   onClick={() => {}}
                   isOverlay
+                  setAiSuggestion={setAiSuggestion}
                 />
               ) : null}
             </DragOverlay>

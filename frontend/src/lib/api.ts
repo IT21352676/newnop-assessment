@@ -133,3 +133,14 @@ export async function removeOptionalField(
   );
   return response.data;
 }
+
+export async function getAiSuggestions(issueId: string) {
+  const response = await api.get<{
+    content: string;
+    reasoning: string;
+    role: string;
+  }>("/ai-response", {
+    params: { issueId },
+  });
+  return response.data;
+}

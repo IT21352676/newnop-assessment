@@ -16,7 +16,7 @@ const Modal = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+        <div className="fixed inset-0 flex items-center justify-center p-4 w-full z-100">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -28,7 +28,7 @@ const Modal = ({
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            className="relative bg-surface rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden p-6 z-[70]"
+            className="relative bg-surface rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden p-6"
           >
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-bold text-ink-primary tracking-tight">

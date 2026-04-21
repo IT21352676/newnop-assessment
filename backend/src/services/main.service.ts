@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
   IssueDto,
   IssuePriority,
@@ -8,13 +8,16 @@ import {
 import { IssueDatabaseService } from './database/issue.database.service';
 import { UserDatabaseService } from './database/user.database.service';
 import { ConfigService } from '@nestjs/config';
+import { AIService } from './ai.service';
 
 @Injectable()
 export class MainService {
+  private readonly logger = new Logger(MainService.name);
   constructor(
     private readonly issueDatabaseService: IssueDatabaseService,
     private readonly userDatabaseService: UserDatabaseService,
     private readonly configService: ConfigService,
+    private readonly aiService: AIService,
   ) {}
 
   async getAllUsers() {
@@ -63,7 +66,7 @@ export class MainService {
       'OPTIONAL_FIELDS_COUNT',
     );
     if (!optionalFieldCount) {
-      console.warn(
+      this.logger.warn(
         `Optional fields count not defined in .env file, using default count ${defaultCount}`,
       );
       return defaultCount;
@@ -86,5 +89,12 @@ export class MainService {
       issueId,
       optionalFieldId,
     );
+  }
+  async getAiSuggestions(issueId: string) {
+    const issue = await this.issueDatabaseService.findById(issueId);
+    if (!issue) {
+      throw new Error('Issue not found');
+    }
+    return await this.aiService.getAIResponse(issue);
   }
 }
