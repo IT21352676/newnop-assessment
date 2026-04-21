@@ -236,8 +236,9 @@ export default function TriageReport({ data }: TriageReportProps) {
               <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
                 {data.missingInfo.map((m, i) => (
                   <li
+                    className="text-yellow-500"
                     key={i}
-                    style={{ fontSize: 13, color: "#854F0B", padding: "2px 0" }}
+                    style={{ fontSize: 13, padding: "2px 0" }}
                   >
                     — {m}
                   </li>

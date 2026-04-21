@@ -52,6 +52,7 @@ import StatusConfirm from "./UpdateStatus";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import AISuggestion from "./AISuggestion";
+import { Skeleton } from "../ui/Skeleton";
 
 const Kanban = () => {
   const { issues, setIssues, loading, setLoading } = useIssueStore();
@@ -94,6 +95,7 @@ const Kanban = () => {
   }, [filteredIssues, loading, issues]);
 
   useEffect(() => {
+    setLoading(true);
     const fetchIssueStatus = async () => {
       const issueStatus = await getAllIssueStatus();
       setIssueStatus(issueStatus);
@@ -104,6 +106,7 @@ const Kanban = () => {
     };
     fetchIssueStatus();
     fetchUsers();
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -191,6 +194,7 @@ const Kanban = () => {
     status: IssueStatus,
     skipConfirm = false,
   ) => {
+    setLoading(true);
     const issue = issues.find((i) => i.issueId === id);
     if (!skipConfirm) {
       setConfirmStatusOpen(true);
@@ -218,6 +222,7 @@ const Kanban = () => {
         }
       }
     }
+    setLoading(false);
   };
 
   const exportData = (formatType: "json" | "csv") => {
@@ -315,86 +320,94 @@ const Kanban = () => {
               isOpen={isCreatingModalOpen}
               onClose={() => setIsCreatingModalOpen(false)}
             />
-            <button
-              onClick={() => setIsCreatingModalOpen(true)}
-              className="btn-primary flex items-center gap-2 px-6 py-2.5 text-sm"
-            >
-              <Plus className="w-5 h-5" /> Create Issue
-            </button>
 
-            <div className="relative flex items-center">
-              <Search className="absolute left-3 w-4 h-4 text-muted pointer-events-none" />
-              <input
-                type="text"
-                placeholder="Search by title or ID…"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 pr-4 py-2 h-10 rounded-xl border border-primary/20 bg-card/80 text-sm text-primary placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-56"
-              />
-              {searchTerm && (
-                <button
-                  onClick={() => setSearchTerm("")}
-                  className="absolute right-3 text-muted hover:text-primary transition-colors text-xs"
-                >
-                  ✕
-                </button>
-              )}
-            </div>
-            <div className="flex gap-2 flex-wrap">
+            <Skeleton loading={loading} className="w-fit">
+              <button
+                onClick={() => setIsCreatingModalOpen(true)}
+                className="btn-primary flex items-center gap-2 px-6 py-2.5 text-sm"
+              >
+                <Plus className="w-5 h-5" /> Create Issue
+              </button>
+            </Skeleton>
+            <Skeleton loading={loading} className="w-fit">
               <div className="relative flex items-center">
-                <CalendarDays className="absolute left-3 w-4 h-4 text-muted pointer-events-none" />
+                <Search className="absolute left-3 w-4 h-4 text-muted pointer-events-none" />
                 <input
-                  type={dateFrom ? "date" : "text"}
-                  value={dateFrom}
-                  placeholder="Start date"
-                  onFocus={(e) => (e.target.type = "date")}
-                  onBlur={(e) => {
-                    if (!e.target.value) e.target.type = "text";
-                  }}
-                  onChange={(e) => setDateFrom(e.target.value)}
-                  className="pl-9 pr-8 py-2 h-10 rounded-xl border border-primary/20 bg-card/80 text-sm text-primary placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-44 [color-scheme:dark]"
+                  type="text"
+                  placeholder="Search by title or ID…"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-9 pr-4 py-2 h-10 rounded-xl border border-primary/20 bg-card/80 text-sm text-primary placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-56"
                 />
-                {dateFrom && (
+                {searchTerm && (
                   <button
-                    onClick={() => setDateFrom("")}
+                    onClick={() => setSearchTerm("")}
                     className="absolute right-3 text-muted hover:text-primary transition-colors text-xs"
                   >
                     ✕
                   </button>
                 )}
               </div>
+            </Skeleton>
+            <Skeleton loading={loading} className="w-fit">
+              <div className="flex gap-2 flex-wrap">
+                <div className="relative flex items-center">
+                  <CalendarDays className="absolute left-3 w-4 h-4 text-muted pointer-events-none" />
+                  <input
+                    type={dateFrom ? "date" : "text"}
+                    value={dateFrom}
+                    placeholder="Start date"
+                    onFocus={(e) => (e.target.type = "date")}
+                    onBlur={(e) => {
+                      if (!e.target.value) e.target.type = "text";
+                    }}
+                    onChange={(e) => setDateFrom(e.target.value)}
+                    className="pl-9 pr-8 py-2 h-10 rounded-xl border border-primary/20 bg-card/80 text-sm text-primary placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-44 [color-scheme:dark]"
+                  />
+                  {dateFrom && (
+                    <button
+                      onClick={() => setDateFrom("")}
+                      className="absolute right-3 text-muted hover:text-primary transition-colors text-xs"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
 
-              <span className="text-muted text-xs self-center">to</span>
+                <span className="text-muted text-xs self-center">to</span>
 
-              <div className="relative flex items-center">
-                <CalendarDays className="absolute left-3 w-4 h-4 text-muted pointer-events-none" />
-                <input
-                  type={dateTo ? "date" : "text"}
-                  value={dateTo}
-                  placeholder="End date"
-                  onFocus={(e) => (e.target.type = "date")}
-                  onBlur={(e) => {
-                    if (!e.target.value) e.target.type = "text";
-                  }}
-                  onChange={(e) => setDateTo(e.target.value)}
-                  className="pl-9 pr-8 py-2 h-10 rounded-xl border border-primary/20 bg-card/80 text-sm text-primary placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-44 [color-scheme:dark]"
-                />
-                {dateTo && (
-                  <button
-                    onClick={() => setDateTo("")}
-                    className="absolute right-3 text-muted hover:text-primary transition-colors text-xs"
-                  >
-                    ✕
-                  </button>
-                )}
+                <div className="relative flex items-center">
+                  <CalendarDays className="absolute left-3 w-4 h-4 text-muted pointer-events-none" />
+                  <input
+                    type={dateTo ? "date" : "text"}
+                    value={dateTo}
+                    placeholder="End date"
+                    onFocus={(e) => (e.target.type = "date")}
+                    onBlur={(e) => {
+                      if (!e.target.value) e.target.type = "text";
+                    }}
+                    onChange={(e) => setDateTo(e.target.value)}
+                    className="pl-9 pr-8 py-2 h-10 rounded-xl border border-primary/20 bg-card/80 text-sm text-primary placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-44 [color-scheme:dark]"
+                  />
+                  {dateTo && (
+                    <button
+                      onClick={() => setDateTo("")}
+                      className="absolute right-3 text-muted hover:text-primary transition-colors text-xs"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
+            </Skeleton>
 
             <Popover>
               <PopoverTrigger asChild>
-                <button className="btn-secondary flex items-center gap-2 px-5 py-2.5 text-sm">
-                  <Download className="w-4 h-4" /> Export Data
-                </button>
+                <Skeleton loading={loading} className="w-fit">
+                  <button className="btn-secondary flex items-center gap-2 px-5 py-2.5 text-sm">
+                    <Download className="w-4 h-4" /> Export Data
+                  </button>
+                </Skeleton>
               </PopoverTrigger>
               <PopoverContent className="w-fit bg-card border-none focus:outline-none">
                 <div className="grid gap-4">
