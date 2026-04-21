@@ -402,13 +402,13 @@ const Kanban = () => {
             </Skeleton>
 
             <Popover>
-              <PopoverTrigger asChild>
-                <Skeleton loading={loading} className="w-fit">
+              <Skeleton loading={loading} className="w-fit">
+                <PopoverTrigger asChild>
                   <button className="btn-secondary flex items-center gap-2 px-5 py-2.5 text-sm">
                     <Download className="w-4 h-4" /> Export Data
                   </button>
-                </Skeleton>
-              </PopoverTrigger>
+                </PopoverTrigger>{" "}
+              </Skeleton>
               <PopoverContent className="w-fit bg-card border-none focus:outline-none">
                 <div className="grid gap-4">
                   <button
@@ -427,53 +427,55 @@ const Kanban = () => {
               </PopoverContent>
             </Popover>
           </div>
-          <div className="grid bg-card py-2 px-4 rounded-2xl gap-4">
-            <div className="flex gap-2 items-center">
-              <IconUsersGroup className="w-6 h-6 mr-2 mt-2 text-primary/50" />{" "}
-              <span className="text-sm text-muted text-start justify-start items-start">
-                Filter by author
-              </span>
-            </div>
-            <div className="flex overflow-auto w-full">
-              <div className="flex gap-2 items-start custom-scrollbar">
-                <button
-                  onClick={() => setSelectedUserId(null)}
-                  className={`justify-center items-center text-sm rounded-full border border-primary/20 w-10 h-10 hover:bg-accent/60 ${selectedUserId === null ? "bg-accent/60" : "bg-card/80"}`}
-                >
-                  All
-                </button>
+          <Skeleton loading={loading} className="w-full">
+            <div className="grid bg-card py-2 px-4 rounded-2xl gap-4">
+              <div className="flex gap-2 items-center">
+                <IconUsersGroup className="w-6 h-6 mr-2 mt-2 text-primary/50" />{" "}
+                <span className="text-sm text-muted text-start justify-start items-start">
+                  Filter by author
+                </span>
+              </div>
+              <div className="flex overflow-auto w-full">
+                <div className="flex gap-2 items-start custom-scrollbar">
+                  <button
+                    onClick={() => setSelectedUserId(null)}
+                    className={`justify-center items-center text-sm rounded-full border border-primary/20 w-10 h-10 hover:bg-accent/60 ${selectedUserId === null ? "bg-accent/60" : "bg-card/80"}`}
+                  >
+                    All
+                  </button>
 
-                {[...users]
-                  .sort((a, b) =>
-                    a.userId === userId ? -1 : b.userId === userId ? 1 : 0,
-                  )
-                  .map((user, index) => (
-                    <Tooltip key={index}>
-                      <TooltipTrigger asChild>
-                        <div className="grid grid-cols-1 justify-center">
-                          <button
-                            onClick={() => setSelectedUserId(user.userId)}
-                            className={`justify-center items-center text-sm rounded-full border border-primary/20 w-10 h-10 hover:bg-accent/60 ${selectedUserId === user.userId ? "bg-accent/60" : "bg-card/80"}`}
-                          >
-                            {user.userId.charAt(0)}
-                          </button>
-                          {user.userId === userId && (
-                            <span className="font-bold uppercase tracking-wide text-muted text-[10px] mt-1">
-                              You
-                            </span>
-                          )}
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-accent" side="bottom">
-                        <p>{user.userId}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  ))}
+                  {[...users]
+                    .sort((a, b) =>
+                      a.userId === userId ? -1 : b.userId === userId ? 1 : 0,
+                    )
+                    .map((user, index) => (
+                      <Tooltip key={index}>
+                        <TooltipTrigger asChild>
+                          <div className="grid grid-cols-1 justify-center">
+                            <button
+                              onClick={() => setSelectedUserId(user.userId)}
+                              className={`justify-center items-center text-sm rounded-full border border-primary/20 w-10 h-10 hover:bg-accent/60 ${selectedUserId === user.userId ? "bg-accent/60" : "bg-card/80"}`}
+                            >
+                              {user.userId.charAt(0)}
+                            </button>
+                            {user.userId === userId && (
+                              <span className="font-bold uppercase tracking-wide text-muted text-[10px] mt-1">
+                                You
+                              </span>
+                            )}
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-accent" side="bottom">
+                          <p>{user.userId}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    ))}
+                </div>
               </div>
             </div>
-          </div>
+          </Skeleton>
         </div>
-        <div className="relative">
+        <Skeleton loading={loading} className="relative">
           <ScrollIndicator direction="left" visible={canScrollLeft} />
           <ScrollIndicator direction="right" visible={canScrollRight} />
 
@@ -592,7 +594,7 @@ const Kanban = () => {
               ) : null}
             </DragOverlay>
           </DndContext>
-        </div>
+        </Skeleton>
       </main>
     </div>
   );
