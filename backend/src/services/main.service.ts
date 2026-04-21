@@ -4,7 +4,7 @@ import {
   IssuePriority,
   IssueSeverity,
   IssueStatus,
-} from 'src/interfaces/types';
+} from '../interfaces/types';
 import { IssueDatabaseService } from './database/issue.database.service';
 import { UserDatabaseService } from './database/user.database.service';
 import { ConfigService } from '@nestjs/config';
