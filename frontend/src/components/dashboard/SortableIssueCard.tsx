@@ -30,6 +30,7 @@ const SortableIssueCard = ({
     } | null,
   ) => void;
 }) => {
+  const [isAiLoading, setIsAiLoading] = useState(false);
   const {
     attributes,
     listeners,
@@ -59,8 +60,6 @@ const SortableIssueCard = ({
       />
     );
   }
-
-  const [isAiLoading, setIsAiLoading] = useState(false);
 
   const handleAskAI = async (e: React.MouseEvent, issueId: string) => {
     setIsAiLoading(true);

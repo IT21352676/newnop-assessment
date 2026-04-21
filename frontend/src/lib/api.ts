@@ -15,7 +15,7 @@ if (!apiUrl) {
 }
 
 const api = axios.create({
-  baseURL: apiUrl,
+  baseURL: `${apiUrl}/api/v1`,
 });
 
 api.interceptors.request.use((config) => {

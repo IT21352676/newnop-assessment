@@ -5,7 +5,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { IssueDto } from 'src/interfaces/types';
+import { IssueDto } from '../interfaces/types';
 
 function buildPrompt(issue: IssueDto): string {
   const optionalFieldsText = issue.optionalFields?.length

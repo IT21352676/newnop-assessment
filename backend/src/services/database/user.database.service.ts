@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { UserDto } from 'src/interfaces/types';
-import { User } from 'src/objects/user.object';
+import { UserDto } from '../../interfaces/types';
+import { User } from '../../objects/user.object';
 import { Repository } from 'typeorm';
 
 @Injectable()

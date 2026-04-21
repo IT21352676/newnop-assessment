@@ -12,6 +12,7 @@ import { IssueDatabaseService } from './services/database/issue.database.service
 import { UserDatabaseService } from './services/database/user.database.service';
 import { MainService } from './services/main.service';
 import { AIService } from './services/ai.service';
+import { MainController } from './main.controller';
 
 @Module({
   imports: [
@@ -57,7 +58,7 @@ import { AIService } from './services/ai.service';
     }),
     TypeOrmModule.forFeature([User, Issue]),
   ],
-  controllers: [AppController],
+  controllers: [AppController, MainController],
   providers: [
     AppService,
     UserDatabaseService,

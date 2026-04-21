@@ -9,10 +9,13 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  //app.use(express.static(join(__dirname, '..', 'public')));
+  app.use(express.static(join(__dirname, '..', 'public')));
 
   app.enableCors({
-    origin: ['http://localhost:3001'],
+    origin: [
+      'http://localhost:3001',
+      'https://newnop-assessment-311l.vercel.app',
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });

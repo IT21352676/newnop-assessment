@@ -1,11 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import { User } from './user.object';
-import {
-  IssuePriority,
-  IssueSeverity,
-  IssueStatus,
-} from 'src/interfaces/types';
+import { IssuePriority, IssueSeverity, IssueStatus } from '../interfaces/types';
 
 @Entity()
 export class Issue {
