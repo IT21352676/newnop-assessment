@@ -475,7 +475,8 @@ const Kanban = () => {
             </div>
           </Skeleton>
         </div>
-        <Skeleton loading={loading} className="relative">
+
+        <div className="relative">
           <ScrollIndicator direction="left" visible={canScrollLeft} />
           <ScrollIndicator direction="right" visible={canScrollRight} />
 
@@ -495,60 +496,62 @@ const Kanban = () => {
                   (i) => i.status === status,
                 );
                 return (
-                  <div
-                    key={status}
-                    className="flex flex-col gap-4 min-w-90 bg-card/80 p-4 rounded-2xl mb-4"
-                  >
-                    <div className="flex items-center justify-between px-2">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`${issueStatusMap[status].color} animate-pulse`}
-                        >
-                          {issueStatusMap[status].icon}
+                  <Skeleton loading={loading} className="min-w-90">
+                    <div
+                      key={status}
+                      className="flex flex-col gap-4 min-w-90 bg-card/80 p-4 rounded-2xl mb-4"
+                    >
+                      <div className="flex items-center justify-between px-2">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`${issueStatusMap[status].color} animate-pulse`}
+                          >
+                            {issueStatusMap[status].icon}
+                          </span>
+                          <h3
+                            className={`text-[11px] font-bold uppercase tracking-[0.15em] text-ink-primary ${issueStatusMap[status].color}`}
+                          >
+                            {status.replace("_", " ")}
+                          </h3>
+                        </div>
+                        <span className="text-[10px] font-mono text-white/50 bg-bg-card/50 px-2 py-0.5 rounded border border-primary/20">
+                          {columnIssues.length}
                         </span>
-                        <h3
-                          className={`text-[11px] font-bold uppercase tracking-[0.15em] text-ink-primary ${issueStatusMap[status].color}`}
+                      </div>
+
+                      <div className="h-full z-10">
+                        <SortableContext
+                          items={columnIssues.map((i) => i.issueId)}
+                          strategy={verticalListSortingStrategy}
                         >
-                          {status.replace("_", " ")}
+                          <DroppableColumn id={status}>
+                            <div className="flex flex-col gap-3 min-h-[400px]">
+                              {columnIssues.map((issue) => (
+                                <SortableIssueCard
+                                  key={issue.issueId}
+                                  issue={issue}
+                                  onClick={(issue) => setSelectedIssue(issue)}
+                                  setAiSuggestion={setAiSuggestion}
+                                />
+                              ))}
+                            </div>
+                          </DroppableColumn>
+                        </SortableContext>
+                      </div>
+                      <div className="relative top-[-250px] p-4 z-0 rounded-2xl mb-4 z-0 max-w-90 grid grid-cols-1 justify-center items-center border-2 border-dashed border-primary/10 gap-4">
+                        <div className="flex justify-center items-center">
+                          <IconDragDrop className="w-8 h-8 text-primary/10" />
+                        </div>
+                        <h3
+                          className={
+                            "text-[11px] font-bold uppercase tracking-[0.15em] text-primary/10 text-center wrap-anywhere"
+                          }
+                        >
+                          Drag and drop between columns to change status
                         </h3>
                       </div>
-                      <span className="text-[10px] font-mono text-white/50 bg-bg-card/50 px-2 py-0.5 rounded border border-primary/20">
-                        {columnIssues.length}
-                      </span>
                     </div>
-
-                    <div className="h-full z-10">
-                      <SortableContext
-                        items={columnIssues.map((i) => i.issueId)}
-                        strategy={verticalListSortingStrategy}
-                      >
-                        <DroppableColumn id={status}>
-                          <div className="flex flex-col gap-3 min-h-[400px]">
-                            {columnIssues.map((issue) => (
-                              <SortableIssueCard
-                                key={issue.issueId}
-                                issue={issue}
-                                onClick={(issue) => setSelectedIssue(issue)}
-                                setAiSuggestion={setAiSuggestion}
-                              />
-                            ))}
-                          </div>
-                        </DroppableColumn>
-                      </SortableContext>
-                    </div>
-                    <div className="relative top-[-250px] p-4 z-0 rounded-2xl mb-4 z-0 max-w-90 grid grid-cols-1 justify-center items-center border-2 border-dashed border-primary/10 gap-4">
-                      <div className="flex justify-center items-center">
-                        <IconDragDrop className="w-8 h-8 text-primary/10" />
-                      </div>
-                      <h3
-                        className={
-                          "text-[11px] font-bold uppercase tracking-[0.15em] text-primary/10 text-center wrap-anywhere"
-                        }
-                      >
-                        Drag and drop between columns to change status
-                      </h3>
-                    </div>
-                  </div>
+                  </Skeleton>
                 );
               })}
             </div>
@@ -594,7 +597,7 @@ const Kanban = () => {
               ) : null}
             </DragOverlay>
           </DndContext>
-        </Skeleton>
+        </div>
       </main>
     </div>
   );
