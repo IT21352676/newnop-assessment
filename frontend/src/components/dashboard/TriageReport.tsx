@@ -249,9 +249,7 @@ export default function TriageReport({ data }: TriageReportProps) {
       {/* Priority & Severity */}
       <div style={sectionStyle}>
         <SectionLabel>Priority &amp; severity</SectionLabel>
-        <div
-          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}
-        >
+        <div className="flex flex-col sm:flex-row gap-2">
           <Card>
             <span className="text-primary/50 text-[13px] font-bold">
               Priority
