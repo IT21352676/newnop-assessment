@@ -440,7 +440,7 @@ const Kanban = () => {
                 </span>
               </div>
               <div className="flex overflow-auto w-full">
-                <div className="flex gap-2 items-start custom-scrollbar min-w-screen">
+                <div className="flex gap-2 items-start custom-scrollbar min-w-screen mb-2">
                   <button
                     onClick={() => setSelectedUserId(null)}
                     className={`justify-center items-center text-sm rounded-full border border-primary/20 min-w-10 min-h-10 hover:bg-accent/60 ${selectedUserId === null ? "bg-accent/60" : "bg-card/80"}`}
