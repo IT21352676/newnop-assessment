@@ -186,17 +186,17 @@ export default function TriageReport({ data }: TriageReportProps) {
         padding: "1rem 0",
       }}
     >
-      {/* Header */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
+          justifyContent: "center",
           gap: 10,
           marginBottom: "1.25rem",
           flexWrap: "wrap",
         }}
       >
-        <span className="text-primary/60 text-[17px] font-bold uppercase">
+        <span className="text-primary/60 text-[17px] font-bold uppercase text-center">
           Issue triage report
         </span>
         {data.classification.type && (
@@ -213,38 +213,38 @@ export default function TriageReport({ data }: TriageReportProps) {
           className="bg-yellow-500/20 border border-yellow-500/20 rounded-xl p-4 items-center text-yellow-500 mb-4"
           style={{
             display: "flex",
-            gap: 10,
+            flexDirection: "column",
             alignItems: "flex-start",
           }}
         >
-          <span style={{ fontSize: 16, flexShrink: 0 }}>⚠</span>
-          <div>
+          <div className="flex gap-2 justify-center items-center w-full">
+            <span style={{ fontSize: 16, flexShrink: 0 }}>⚠</span>
+
             <p
-              className="mt-0.5"
+              className="mt-0.5 text-[12px] sm:text-sm text-center"
               style={{
-                fontSize: 13,
                 fontWeight: 500,
               }}
             >
               Issue lacks sufficient detail — root cause analysis skipped
             </p>
-            {data.missingInfo.length > 0 && (
-              <ul
-                style={{ listStyle: "none" }}
-                className="justify-items-start mt-4"
-              >
-                {data.missingInfo.map((m, i) => (
-                  <li
-                    className="text-yellow-500 "
-                    key={i}
-                    style={{ fontSize: 13, padding: "2px 0" }}
-                  >
-                    — {m}
-                  </li>
-                ))}
-              </ul>
-            )}
           </div>
+          {data.missingInfo.length > 0 && (
+            <ul
+              style={{ listStyle: "none" }}
+              className="justify-items-start mt-4"
+            >
+              {data.missingInfo.map((m, i) => (
+                <li
+                  className="text-yellow-500 "
+                  key={i}
+                  style={{ fontSize: 13, padding: "2px 0" }}
+                >
+                  — {m}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
 
