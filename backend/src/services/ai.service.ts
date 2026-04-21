@@ -13,71 +13,44 @@ function buildPrompt(issue: IssueDto): string {
     : 'None';
 
   return `
-You are a senior software engineer and issue triage expert.
+You are an issue triage expert. Analyze the issue and return ONLY valid JSON — no markdown, no preamble, no backticks.
 
-Analyze the issue and provide a structured response.
-
-----------------------
-TASKS:
-1. Classify the bug type
-2. Evaluate and suggest better Priority and Severity (if needed)
-3. Identify:
-   - Possible root causes
-   - Suggested fixes
-   - Debugging steps
-4. Detect if the issue is unclear or lacks sufficient detail
-5. Generate a professional Jira-style comment
-
-----------------------
 ISSUE DETAILS:
-
 Title: ${issue.title}
 Description: ${issue.description}
 Status: ${issue.status}
 Priority: ${issue.priority}
 Severity: ${issue.severity}
-
 Additional Fields:
 ${optionalFieldsText}
 
-----------------------
-OUTPUT FORMAT:
-
-### Clarity Assessment
-- Is the issue clear enough? (Yes/No)
-- If No, what is missing?
-
-### Bug Classification
-- Type: 
-
-### Priority & Severity Review
-- Current Priority: ${issue.priority}
-- Suggested Priority:
-- Current Severity: ${issue.severity}
-- Suggested Severity:
-- Reasoning:
-
-### Analysis
-**Possible Root Causes:**
-- ...
-
-**Suggested Fixes:**
-- ...
-
-**Debugging Steps:**
-- ...
-
-### Jira Comment
-(Write a concise, professional comment suitable for Jira)
-
-----------------------
-IMPORTANT:
-- Remeber that if the issue lacks detail, clearly say so and DO NOT guess root causes
-- Keep the response concise but useful
-- Be practical and actionable
-`;
+Return this exact JSON shape:
+{
+  "classification": {
+    "type": "string (e.g. UI / Functional)",
+    "component": "string (e.g. Frontend - Update Detail Screen)"
+  },
+  "prioritySeverity": {
+    "currentPriority": "string",
+    "suggestedPriority": "string",
+    "currentSeverity": "string",
+    "suggestedSeverity": "string",
+    "rationale": "string"
+  },
+  "isUnclear": true | false,
+  "missingInfo": ["string"] | [],
+  "rootCauses": [{ "area": "string", "cause": "string" }] | [],
+  "suggestedFixes": ["string"] | [],
+  "debuggingSteps": [{ "step": number, "action": "string" }] | [],
+  "jiraComment": "string (plain text, professional tone)"
 }
 
+IMPORTANT RULES:
+- If isUnclear is true, set rootCauses, suggestedFixes, debuggingSteps to empty arrays
+- Be concise but actionable
+- Return ONLY the JSON object
+`;
+}
 @Injectable()
 export class AIService {
   private apiKey: string | undefined;

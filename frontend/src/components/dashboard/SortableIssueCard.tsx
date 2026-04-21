@@ -94,7 +94,7 @@ const SortableIssueCard = ({
       {...attributes}
       {...listeners}
       onClick={() => onClick(issue)}
-      className={`h-[230px] group w-full bg-black p-4 rounded-xl cursor-grab active:cursor-grabbing hover:border-ink-muted/30 transition-all touch-none ${isOverlay ? "shadow-2xl ring-2 ring-accent" : ""}`}
+      className={`h-[230px] group w-full bg-black p-4 rounded-xl cursor-grab active:cursor-grabbing transition-all touch-none ${isOverlay ? "shadow-2xl ring-2 ring-accent" : ""}`}
     >
       <div className="flex items-center justify-between mb-2">
         <span className="text-[11px] font-mono text-ink-muted group-hover:text-accent font-medium uppercase tracking-widest">
@@ -106,13 +106,14 @@ const SortableIssueCard = ({
           {issue.priority} {issuePriorityMap[issue.priority].icon}
         </Badge>
       </div>
-      <h4 className="text-[16px] font-semibold text-ink-primary line-clamp-2 mb-2 leading-snug text-start mt-4">
-        {issue.title}
+      <h4 className="text-[16px] font-semibold text-ink-primary line-clamp-2 mb-2 leading-snug text-start mt-4 truncate">
+        {issue.title}dsadsadasdsdsadsadsadsadasdsadsadas
       </h4>
 
-      <div className="bg-card/70 rounded-md p-2 mb-2 min-h-15">
+      <div className="bg-primary/10 rounded-md p-2 mb-2 min-h-15">
         <p className="text-[12px] text-ink-primary line-clamp-2 text-start wrap-break-word">
           {issue.description}
+          dsdsadsadsadsadsadkjsadsahdjksahdjksahdkjsahdkjsahdkjsahdjksahdjksadhksjadhsajkdhsajkdhsajkdhsakjdhaskdhsajkdhsakjdhsajkdhsjksamdbsmnadbsamndbsamb
         </p>
       </div>
       <div className="flex w-full justify-end mb-2">

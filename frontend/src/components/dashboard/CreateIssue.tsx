@@ -1,18 +1,17 @@
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import {
+  createIssue,
+  getAllIssuePriority,
+  getAllIssueSeverity,
+} from "../../lib/api";
 import {
   Issue,
   IssuePriority,
   IssueSeverity,
   IssueStatus,
 } from "../../lib/types";
-import React, { useEffect, useState } from "react";
 import Modal from "../ui/Modal";
-import {
-  createIssue,
-  getAllIssuePriority,
-  getAllIssueSeverity,
-} from "../../lib/api";
-import { toast } from "react-toastify";
-import { useAuthStore } from "../../lib/store";
 
 const CreateIssue = ({
   isOpen,
@@ -84,7 +83,7 @@ const CreateIssue = ({
           </label>
           <input
             required
-            className="input-field"
+            className="pl-3 pr-4 py-2 h-10 rounded-md border border-primary/20 bg-card/20 text-sm text-primary placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-full"
             placeholder="e.g. Authentication token expiry failure"
             value={issue?.title}
             onChange={(e) => setIssue({ ...issue, title: e.target.value })}
@@ -96,7 +95,7 @@ const CreateIssue = ({
           </label>
           <textarea
             rows={4}
-            className="input-field py-3 min-h-[120px]"
+            className="min-h-[120px] pl-3 pr-4 py-2 h-10 rounded-md border border-primary/20 bg-card/20 text-sm text-primary placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-full"
             placeholder="Observed behaviors, stack traces, or reproduction vectors..."
             value={issue?.description}
             onChange={(e) =>
@@ -110,7 +109,7 @@ const CreateIssue = ({
               Prioritization
             </label>
             <select
-              className="border border-primary/20 p-2 rounded-md w-full focus:outline-none"
+              className="pl-3 pr-4 py-2 h-10 rounded-md border border-primary/20 bg-card/20 text-sm text-muted placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-full"
               value={issue?.priority || ""}
               onChange={(e) =>
                 setIssue({
@@ -138,7 +137,7 @@ const CreateIssue = ({
               Severity Class
             </label>
             <select
-              className="border border-primary/20 p-2 rounded-md w-full focus:outline-none"
+              className="pl-3 pr-4 py-2 h-10 rounded-md border border-primary/20 bg-card/20 text-sm text-muted placeholder:text-muted outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 transition-all w-full"
               value={issue?.severity || ""}
               onChange={(e) =>
                 setIssue({
