@@ -218,15 +218,13 @@ export default function TriageReport({ data }: TriageReportProps) {
           }}
         >
           <div className="flex gap-2 justify-center items-center w-full">
-            <span style={{ fontSize: 16, flexShrink: 0 }}>⚠</span>
-
             <p
               className="mt-0.5 text-[12px] sm:text-sm text-center"
               style={{
                 fontWeight: 500,
               }}
             >
-              Issue lacks sufficient detail — root cause analysis skipped
+              ⚠ Issue lacks sufficient detail — root cause analysis skipped
             </p>
           </div>
           {data.missingInfo.length > 0 && (
