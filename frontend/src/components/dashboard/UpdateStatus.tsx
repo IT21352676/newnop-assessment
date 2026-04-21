@@ -75,14 +75,14 @@ const StatusConfirm = ({
     >
       <div className="space-y-6">
         <div className="flex flex-col items-center gap-3 py-2">
-          <div className="flex items-center gap-2">
+          <div className="flex sm:flex-row flex-col items-center gap-2">
             <span
               className={`flex ${issueStatusMap[statusUpdatingIssue?.currentStatus]?.color} gap-2 font-bold uppercase tracking-[0.15em] text-[14px] items-center`}
             >
               {issueStatusMap[statusUpdatingIssue?.currentStatus]?.icon}
               {statusUpdatingIssue?.currentStatus?.replace("_", " ")}
             </span>
-            <IconArrowNarrowRightDashed className="w-10 h-10 text-primary animate-bounce-right" />
+            <IconArrowNarrowRightDashed className="w-10 h-10 text-primary animate-bounce-right rotate-90 sm:rotate-0" />
             <span
               className={`flex ${issueStatusMap[statusUpdatingIssue?.newStatus]?.color} gap-2 font-bold uppercase tracking-[0.15em] text-[14px] items-center`}
             >

@@ -56,7 +56,7 @@ const SortableIssueCard = ({
       <div
         ref={setNodeRef}
         style={style}
-        className="w-full h-[230px] bg-card/20 border border-dashed border-accent/50 rounded-xl"
+        className="w-full h-[240px] bg-card/20 border border-dashed border-accent/50 rounded-xl"
       />
     );
   }
@@ -94,7 +94,7 @@ const SortableIssueCard = ({
       {...attributes}
       {...listeners}
       onClick={() => onClick(issue)}
-      className={`h-[230px] group w-full bg-black p-4 rounded-xl cursor-grab active:cursor-grabbing transition-all touch-none ${isOverlay ? "shadow-2xl ring-2 ring-accent" : ""}`}
+      className={`h-[240px] group w-full bg-black p-4 rounded-xl cursor-grab active:cursor-grabbing transition-all touch-none ${isOverlay ? "shadow-2xl ring-2 ring-accent" : ""}`}
     >
       <div className="flex items-center justify-between mb-2">
         <span className="text-[11px] font-mono text-ink-muted group-hover:text-accent font-medium uppercase tracking-widest">

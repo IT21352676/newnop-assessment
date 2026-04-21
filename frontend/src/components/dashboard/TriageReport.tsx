@@ -97,7 +97,7 @@ const RowItem = ({
   left,
   children,
 }: {
-  left: React.ReactNode;
+  left?: React.ReactNode;
   children: React.ReactNode;
 }) => (
   <div
@@ -249,8 +249,8 @@ export default function TriageReport({ data }: TriageReportProps) {
       {/* Priority & Severity */}
       <div style={sectionStyle}>
         <SectionLabel>Priority &amp; severity</SectionLabel>
-        <div className="flex flex-col sm:flex-row gap-2">
-          <Card>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 justify-center w-full items-center">
+          <Card style={{ width: "100%" }}>
             <span className="text-primary/50 text-[13px] font-bold">
               Priority
             </span>
@@ -269,7 +269,7 @@ export default function TriageReport({ data }: TriageReportProps) {
               />
             </div>
           </Card>
-          <Card>
+          <Card style={{ width: "100%" }}>
             <span className="text-primary/50 text-[13px] font-bold">
               Severity
             </span>
@@ -308,9 +308,12 @@ export default function TriageReport({ data }: TriageReportProps) {
           <SectionLabel>Root cause possibilities</SectionLabel>
           <Card style={{ padding: "0.5rem 1.25rem" }}>
             {data.rootCauses.map((r, i) => (
-              <RowItem key={i} left={<AreaTag label={r.area} />}>
-                {r.cause}
-              </RowItem>
+              <div key={i} className="flex flex-col gap-2">
+                <div className="flex h-fit">
+                  <AreaTag label={r.area} />
+                </div>
+                <RowItem>{r.cause}</RowItem>
+              </div>
             ))}
           </Card>
         </div>
