@@ -54,7 +54,7 @@ const SortableIssueCard = ({
       {...attributes}
       {...listeners}
       onClick={() => onClick(issue)}
-      className={`h-[200px] group w-full bg-black/30  p-4 rounded-xl cursor-grab active:cursor-grabbing hover:border-ink-muted/30 transition-all ${isOverlay ? "shadow-2xl ring-2 ring-accent" : ""}`}
+      className={`h-[200px] group w-full bg-black  p-4 rounded-xl cursor-grab active:cursor-grabbing hover:border-ink-muted/30 transition-all ${isOverlay ? "shadow-2xl ring-2 ring-accent" : ""}`}
     >
       <div className="flex items-center justify-between mb-2">
         <span className="text-[11px] font-mono text-ink-muted group-hover:text-accent font-medium uppercase tracking-widest">

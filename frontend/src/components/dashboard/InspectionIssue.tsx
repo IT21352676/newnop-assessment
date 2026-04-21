@@ -28,6 +28,7 @@ import {
 } from "../../lib/utils";
 import { IconClock } from "@tabler/icons-react";
 import DeleteConfirm from "./DeleteIssue";
+import StatusConfirm from "./UpdateStatus";
 
 const InspectionIssue = ({
   selectedIssue,
@@ -128,7 +129,13 @@ const InspectionIssue = ({
         reFetchIssue();
         onChange();
       } catch (err: any) {
-        toast.error(err.response.data.message);
+        toast.error(
+          err.response
+            ? err.response.data.message
+              ? err.response.data.message
+              : err.response
+            : "Something went wrong",
+        );
       } finally {
         setLoading(false);
       }
@@ -150,7 +157,13 @@ const InspectionIssue = ({
       reFetchIssue();
       onChange();
     } catch (err: any) {
-      toast.error(err.response.data.message);
+      toast.error(
+        err.response
+          ? err.response.data.message
+            ? err.response.data.message
+            : err.response
+          : "Something went wrong",
+      );
     } finally {
       setLoading(false);
     }
@@ -164,6 +177,14 @@ const InspectionIssue = ({
         filteredOptionalFields?.length === 0)
     );
   };
+
+  const [confirmStatusOpen, setConfirmStatusOpen] = useState(false);
+  const [statusUpdatingIssue, setStatusUpdatingIssue] = useState<{
+    id: string;
+    issue: Issue;
+    currentStatus: IssueStatus;
+    newStatus: IssueStatus;
+  }>();
 
   return (
     <Modal
@@ -195,19 +216,13 @@ const InspectionIssue = ({
                     ...issue,
                     status: e.target.value as IssueStatus,
                   });
-                  try {
-                    setLoading(true);
-                    await updateIssue({
-                      ...issue,
-                      status: e.target.value as IssueStatus,
-                    });
-                    toast.success("Issue updated successfully");
-                    onChange();
-                  } catch (err: any) {
-                    toast.error(err.response.data.message);
-                  } finally {
-                    setLoading(false);
-                  }
+                  setStatusUpdatingIssue({
+                    id: issue.issueId,
+                    issue: issue,
+                    currentStatus: issue.status,
+                    newStatus: e.target.value as IssueStatus,
+                  });
+                  setConfirmStatusOpen(true);
                 }}
               >
                 <option value="" disabled className="bg-surface text-muted">
@@ -223,7 +238,17 @@ const InspectionIssue = ({
                   </option>
                 ))}
               </select>
-            </div>
+            </div>{" "}
+            <StatusConfirm
+              setConfirmStatusOpen={setConfirmStatusOpen}
+              confirmStatusOpen={confirmStatusOpen}
+              statusUpdatingIssue={statusUpdatingIssue}
+              onUpdate={() => {
+                onChange();
+                reFetchIssue();
+                setSelectedIssue(null);
+              }}
+            />
             <div className="flex flex-col gap-2 justify-between border border-dashed border-primary/20 p-4 rounded-lg">
               <span className="font-bold uppercase tracking-wide text-[12px]">
                 Priority
@@ -255,7 +280,13 @@ const InspectionIssue = ({
                     toast.success("Issue updated successfully");
                     onChange();
                   } catch (err: any) {
-                    toast.error(err.response.data.message);
+                    toast.error(
+                      err.response
+                        ? err.response.data.message
+                          ? err.response.data.message
+                          : err.response
+                        : "Something went wrong",
+                    );
                   } finally {
                     setLoading(false);
                   }
@@ -306,7 +337,13 @@ const InspectionIssue = ({
                     toast.success("Issue updated successfully");
                     onChange();
                   } catch (err: any) {
-                    toast.error(err.response.data.message);
+                    toast.error(
+                      err.response
+                        ? err.response.data.message
+                          ? err.response.data.message
+                          : err.response
+                        : "Something went wrong",
+                    );
                   } finally {
                     setLoading(false);
                   }

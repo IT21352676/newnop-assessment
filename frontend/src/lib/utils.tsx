@@ -26,35 +26,65 @@ import {
 import { IssuePriority, IssueSeverity, IssueStatus } from "./types";
 
 export const issueStatusMap: Partial<
-  Record<IssueStatus, { icon: JSX.Element; color: string }>
+  Record<
+    IssueStatus,
+    {
+      icon: JSX.Element;
+      color: string;
+      bgColor: string;
+      borderColor: string;
+      hoverBgColor: string;
+    }
+  >
 > = {
   [IssueStatus.Open]: {
     icon: <IconCircleOpenArrowRight />,
     color: "text-blue-500",
+    bgColor: "bg-blue-500/10",
+    hoverBgColor: "hover:bg-blue-500/20",
+    borderColor: "border-blue-500/20",
   },
   [IssueStatus.InProgress]: {
     icon: <IconProgress />,
     color: "text-yellow-500",
+    bgColor: "bg-yellow-500/10",
+    hoverBgColor: "hover:bg-yellow-500/20",
+    borderColor: "border-yellow-500/20",
   },
   [IssueStatus.InReview]: {
     icon: <IconAnalyze />,
     color: "text-purple-500",
+    bgColor: "bg-purple-500/10",
+    hoverBgColor: "hover:bg-purple-500/20",
+    borderColor: "border-purple-500/20",
   },
   [IssueStatus.Resolved]: {
     icon: <IconSquareRoundedCheck />,
     color: "text-green-500",
+    bgColor: "bg-green-500/10",
+    hoverBgColor: "hover:bg-green-500/20",
+    borderColor: "border-green-500/20",
   },
   [IssueStatus.Closed]: {
     icon: <IconSquareRoundedX />,
     color: "text-gray-500",
+    bgColor: "bg-gray-500/10",
+    hoverBgColor: "hover:bg-gray-500/20",
+    borderColor: "border-gray-500/20",
   },
   [IssueStatus.Reopened]: {
     icon: <IconCircleOpenArrowLeft />,
     color: "text-orange-500",
+    bgColor: "bg-orange-500/10",
+    hoverBgColor: "hover:bg-orange-500/20",
+    borderColor: "border-orange-500/20",
   },
   [IssueStatus.Blocked]: {
     icon: <IconBarrierBlock />,
     color: "text-red-500",
+    bgColor: "bg-red-500/10",
+    hoverBgColor: "hover:bg-red-500/20",
+    borderColor: "border-red-500/20",
   },
 };
 

@@ -13,7 +13,12 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { IconFileTypeCsv, IconJson, IconUsersGroup } from "@tabler/icons-react";
+import {
+  IconDragDrop,
+  IconFileTypeCsv,
+  IconJson,
+  IconUsersGroup,
+} from "@tabler/icons-react";
 import {
   CalendarDays,
   ChevronLeft,
@@ -40,6 +45,8 @@ import InspectionIssue from "./InspectionIssue";
 import SortableIssueCard from "./SortableIssueCard";
 import DroppableColumn from "../ui/DroppableColumn";
 import ScrollIndicator from "../ui/ScrollIndicator";
+import Modal from "../ui/Modal";
+import StatusConfirm from "./UpdateStatus";
 
 const Kanban = () => {
   const { issues, setIssues, loading, setLoading } = useIssueStore();
@@ -133,7 +140,13 @@ const Kanban = () => {
       const issues = await getAllIssues();
       setIssues(issues);
     } catch (err: any) {
-      toast.error(err.response.data.message);
+      toast.error(
+        err.response
+          ? err.response.data.message
+            ? err.response.data.message
+            : err.response
+          : "Something went wrong",
+      );
     } finally {
       setLoading(false);
     }
@@ -146,25 +159,44 @@ const Kanban = () => {
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm, isCreatingModalOpen]);
 
+  const [confirmStatusOpen, setConfirmStatusOpen] = useState(false);
+  const [statusUpdatingIssue, setStatusUpdatingIssue] = useState<{
+    id: string;
+    issue: Issue;
+    currentStatus: IssueStatus;
+    newStatus: IssueStatus;
+  }>();
+
   const handleUpdateStatus = async (
     id: string,
     status: IssueStatus,
     skipConfirm = false,
   ) => {
-    if (
-      !skipConfirm &&
-      !confirm(`Are you sure you want to mark this issue as ${status}?`)
-    )
-      return;
     const issue = issues.find((i) => i.issueId === id);
-    if (issue) {
-      try {
-        await updateIssue({ ...issue, status, issueId: id });
-        fetchIssueData();
-        toast.success(`Issue updated successfully`);
-        if (selectedIssue?.issueId === id) setSelectedIssue(null);
-      } catch (err: any) {
-        toast.error(err.response.data.message);
+    if (!skipConfirm) {
+      setConfirmStatusOpen(true);
+      setStatusUpdatingIssue({
+        id,
+        issue,
+        currentStatus: issue?.status,
+        newStatus: status,
+      });
+    } else {
+      if (issue) {
+        try {
+          await updateIssue({ ...issue, status, issueId: id });
+          fetchIssueData();
+          toast.success(`Issue updated successfully`);
+          if (selectedIssue?.issueId === id) setSelectedIssue(null);
+        } catch (err: any) {
+          toast.error(
+            err.response
+              ? err.response.data.message
+                ? err.response.data.message
+                : err.response
+              : "Something went wrong",
+          );
+        }
       }
     }
   };
@@ -219,7 +251,13 @@ const Kanban = () => {
       toast.success(`Issues exported successfully`);
     } catch (err: any) {
       toast.dismiss();
-      toast.error(err.response.data.message);
+      toast.error(
+        err.response
+          ? err.response.data.message
+            ? err.response.data.message
+            : err.response
+          : "Something went wrong",
+      );
     }
   };
 
@@ -245,7 +283,7 @@ const Kanban = () => {
     }
 
     if (newStatus && activeData?.issue.status !== newStatus) {
-      await handleUpdateStatus(issueId, newStatus, true);
+      await handleUpdateStatus(issueId, newStatus, false);
     }
   };
 
@@ -445,7 +483,7 @@ const Kanban = () => {
                       </span>
                     </div>
 
-                    <div className="h-full">
+                    <div className="h-full z-10">
                       <SortableContext
                         items={columnIssues.map((i) => i.issueId)}
                         strategy={verticalListSortingStrategy}
@@ -463,6 +501,18 @@ const Kanban = () => {
                         </DroppableColumn>
                       </SortableContext>
                     </div>
+                    <div className="relative top-[-250px] p-4 rounded-2xl mb-4 z-0 max-w-90 grid grid-cols-1 justify-center items-center border-2 border-dashed border-primary/10 gap-4">
+                      <div className="flex justify-center items-center">
+                        <IconDragDrop className="w-8 h-8 text-primary/10" />
+                      </div>
+                      <h3
+                        className={
+                          "text-[11px] font-bold uppercase tracking-[0.15em] text-primary/10 text-center wrap-anywhere"
+                        }
+                      >
+                        Drag and drop between columns to change status
+                      </h3>
+                    </div>
                   </div>
                 );
               })}
@@ -473,7 +523,15 @@ const Kanban = () => {
               setSelectedIssue={setSelectedIssue}
               onChange={fetchIssueData}
             />
-
+            <StatusConfirm
+              confirmStatusOpen={confirmStatusOpen}
+              setConfirmStatusOpen={setConfirmStatusOpen}
+              statusUpdatingIssue={statusUpdatingIssue}
+              setStatusUpdatingIssue={setStatusUpdatingIssue}
+              setSelectedIssue={setSelectedIssue}
+              selectedIssue={selectedIssue}
+              onUpdate={fetchIssueData}
+            />
             <DragOverlay
               dropAnimation={{
                 sideEffects: defaultDropAnimationSideEffects({
