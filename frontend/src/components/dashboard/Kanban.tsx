@@ -314,8 +314,8 @@ const Kanban = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col ">
-      <main className="w-full mx-auto py-10 overflow-y-auto">
+    <div className="flex-1 flex flex-col mt-10">
+      <main className="w-full mx-auto overflow-y-auto">
         <div className="grid space-y-8 mb-4">
           <div className="flex sm:justify-between gap-3 w-full flex-wrap">
             <CreateIssue
@@ -553,7 +553,7 @@ const Kanban = () => {
                           </DroppableColumn>
                         </SortableContext>
                       </div>
-                      <div className="relative top-[-50%] p-4 z-0 rounded-2xl mb-4 z-0 max-w-90 grid grid-cols-1 justify-center items-center border-2 border-dashed border-primary/10 gap-4">
+                      <div className="relative top-[-50%] p-4 z-0 rounded-2xl mb-4 max-w-90 grid grid-cols-1 justify-center items-center border-2 border-dashed border-primary/10 gap-4">
                         <div className="flex justify-center items-center">
                           <IconDragDrop className="w-8 h-8 text-primary/10" />
                         </div>
