@@ -5,6 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AddAiSuggestionToIssue1745798400000 } from './migrations/1745798400000-AddAiSuggestionToIssue';
 import { Issue } from './objects/issue.object';
 import { User } from './objects/user.object';
 import { AuthService } from './services/auth.service';
@@ -52,7 +53,9 @@ import { MainController } from './main.controller';
           password: dbPassword,
           database: dbName,
           autoLoadEntities: true,
-          synchronize: false, // disable in production
+          synchronize: false,
+          migrations: [AddAiSuggestionToIssue1745798400000],
+          migrationsRun: true,
         };
       },
     }),
