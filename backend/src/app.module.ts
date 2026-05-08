@@ -5,7 +5,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AddAiSuggestionToIssue1745798400000 } from './migrations/1745798400000-AddAiSuggestionToIssue';
 import { Issue } from './objects/issue.object';
 import { User } from './objects/user.object';
 import { AuthService } from './services/auth.service';
@@ -13,6 +12,7 @@ import { IssueDatabaseService } from './services/database/issue.database.service
 import { UserDatabaseService } from './services/database/user.database.service';
 import { MainService } from './services/main.service';
 import { AIService } from './services/ai.service';
+import { DbMigrationService } from './services/db-migration.service';
 import { MainController } from './main.controller';
 
 @Module({
@@ -54,8 +54,6 @@ import { MainController } from './main.controller';
           database: dbName,
           autoLoadEntities: true,
           synchronize: false,
-          migrations: [AddAiSuggestionToIssue1745798400000],
-          migrationsRun: true,
         };
       },
     }),
@@ -69,6 +67,7 @@ import { MainController } from './main.controller';
     AuthService,
     MainService,
     AIService,
+    DbMigrationService,
   ],
 })
 export class AppModule {}
