@@ -9,23 +9,24 @@ export class DbMigrationService implements OnModuleInit {
   constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
   async onModuleInit() {
+    this.logger.log('DbMigrationService: running schema check');
     await this.ensureAiSuggestionColumn();
   }
 
   private async ensureAiSuggestionColumn() {
-    const rows = await this.dataSource.query(
-      `SELECT COLUMN_NAME
-       FROM INFORMATION_SCHEMA.COLUMNS
-       WHERE TABLE_SCHEMA = DATABASE()
-         AND TABLE_NAME = 'issue'
-         AND COLUMN_NAME = 'aiSuggestion'`,
-    );
-
-    if (rows.length === 0) {
+    try {
       await this.dataSource.query(
         'ALTER TABLE `issue` ADD `aiSuggestion` JSON NULL',
       );
-      this.logger.log('Added aiSuggestion column to issue table');
+      this.logger.log('DbMigrationService: added aiSuggestion column');
+    } catch (error: any) {
+      // errno 1060 = "Duplicate column name" — column already exists, nothing to do
+      if (error?.errno === 1060) {
+        this.logger.log('DbMigrationService: aiSuggestion column already exists');
+        return;
+      }
+      this.logger.error('DbMigrationService: failed to add aiSuggestion column', error?.message);
+      throw error;
     }
   }
 }
