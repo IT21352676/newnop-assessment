@@ -12,7 +12,6 @@ import { IssueDatabaseService } from './services/database/issue.database.service
 import { UserDatabaseService } from './services/database/user.database.service';
 import { MainService } from './services/main.service';
 import { AIService } from './services/ai.service';
-import { DbMigrationService } from './services/db-migration.service';
 import { MainController } from './main.controller';
 
 @Module({
@@ -53,7 +52,7 @@ import { MainController } from './main.controller';
           password: dbPassword,
           database: dbName,
           autoLoadEntities: true,
-          synchronize: false,
+          synchronize: true,
         };
       },
     }),
@@ -67,7 +66,6 @@ import { MainController } from './main.controller';
     AuthService,
     MainService,
     AIService,
-    DbMigrationService,
   ],
 })
 export class AppModule {}
