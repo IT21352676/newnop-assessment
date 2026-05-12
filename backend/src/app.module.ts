@@ -52,7 +52,7 @@ import { MainController } from './main.controller';
           password: dbPassword,
           database: dbName,
           autoLoadEntities: true,
-          synchronize: true,
+          synchronize: false,
         };
       },
     }),
